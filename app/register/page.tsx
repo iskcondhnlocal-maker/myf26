@@ -2,6 +2,7 @@
 import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+// @ts-expect-error - Cashfree JS SDK does not provide TypeScript declarations
 import { load } from "@cashfreepayments/cashfree-js";
 
 function RegisterForm() {
