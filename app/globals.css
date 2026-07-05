@@ -1,0 +1,128 @@
+@import "tailwindcss";
+
+:root {
+  --background: #131313;
+  --on-background: #e2e2e2;
+  --surface: #131313;
+  --surface-dim: #131313;
+  --surface-bright: #393939;
+  --surface-container-lowest: #0e0e0e;
+  --surface-container-low: #1b1b1b;
+  --surface-container: #1f1f1f;
+  --surface-container-high: #2a2a2a;
+  --surface-container-highest: #353535;
+  --on-surface: #e2e2e2;
+  --on-surface-variant: #c6c6cf;
+  --inverse-surface: #e2e2e2;
+  --inverse-on-surface: #303030;
+  --outline: #8f9099;
+  --outline-variant: #45464e;
+  --surface-tint: #b9c5f2;
+  --primary: #b9c5f2;
+  --on-primary: #222f53;
+  --primary-container: #0d1b3e;
+  --on-primary-container: #7784ad;
+  --inverse-primary: #515d84;
+  --secondary: #44dada;
+  --on-secondary: #003737;
+  --secondary-container: #00bbbc;
+  --on-secondary-container: #004545;
+  --tertiary: #ffb3ae;
+  --on-tertiary: #68000c;
+  --tertiary-container: #430005;
+  --on-tertiary-container: #f24246;
+  --error: #ffb4ab;
+  --on-error: #690005;
+  --error-container: #93000a;
+  --on-error-container: #ffdad6;
+  --primary-fixed: #dbe1ff;
+  --primary-fixed-dim: #b9c5f2;
+  --on-primary-fixed: #0b1a3d;
+  --on-primary-fixed-variant: #39456b;
+  --secondary-fixed: #69f7f7;
+  --secondary-fixed-dim: #44dada;
+  --on-secondary-fixed: #002020;
+  --on-secondary-fixed-variant: #004f50;
+  --tertiary-fixed: #ffdad7;
+  --tertiary-fixed-dim: #ffb3ae;
+  --on-tertiary-fixed: #410005;
+  --on-tertiary-fixed-variant: #930016;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--on-background);
+  
+  --color-surface: var(--surface);
+  --color-surface-dim: var(--surface-dim);
+  --color-surface-bright: var(--surface-bright);
+  --color-surface-container-lowest: var(--surface-container-lowest);
+  --color-surface-container-low: var(--surface-container-low);
+  --color-surface-container: var(--surface-container);
+  --color-surface-container-high: var(--surface-container-high);
+  --color-surface-container-highest: var(--surface-container-highest);
+  --color-on-surface: var(--on-surface);
+  --color-on-surface-variant: var(--on-surface-variant);
+  --color-inverse-surface: var(--inverse-surface);
+  --color-inverse-on-surface: var(--inverse-on-surface);
+  --color-outline: var(--outline);
+  --color-outline-variant: var(--outline-variant);
+  --color-surface-tint: var(--surface-tint);
+  --color-primary: var(--primary);
+  --color-on-primary: var(--on-primary);
+  --color-primary-container: var(--primary-container);
+  --color-on-primary-container: var(--on-primary-container);
+  --color-inverse-primary: var(--inverse-primary);
+  --color-secondary: var(--secondary);
+  --color-on-secondary: var(--on-secondary);
+  --color-secondary-container: var(--secondary-container);
+  --color-on-secondary-container: var(--on-secondary-container);
+  --color-tertiary: var(--tertiary);
+  --color-on-tertiary: var(--on-tertiary);
+  --color-tertiary-container: var(--tertiary-container);
+  --color-on-tertiary-container: var(--on-tertiary-container);
+  --color-error: var(--error);
+  --color-on-error: var(--on-error);
+  --color-error-container: var(--error-container);
+  --color-on-error-container: var(--on-error-container);
+  --color-primary-fixed: var(--primary-fixed);
+  --color-primary-fixed-dim: var(--primary-fixed-dim);
+  --color-on-primary-fixed: var(--on-primary-fixed);
+  --color-on-primary-fixed-variant: var(--on-primary-fixed-variant);
+  --color-secondary-fixed: var(--secondary-fixed);
+  --color-secondary-fixed-dim: var(--secondary-fixed-dim);
+  --color-on-secondary-fixed: var(--on-secondary-fixed);
+  --color-on-secondary-fixed-variant: var(--on-secondary-fixed-variant);
+  --color-tertiary-fixed: var(--tertiary-fixed);
+  --color-tertiary-fixed-dim: var(--tertiary-fixed-dim);
+  --color-on-tertiary-fixed: var(--on-tertiary-fixed);
+  --color-on-tertiary-fixed-variant: var(--on-tertiary-fixed-variant);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--on-background);
+}
+
+.ticket-edge {
+  mask-image: radial-gradient(circle at 12px 12px, transparent 12px, black 13px);
+  mask-size: 100% 24px;
+  mask-repeat: repeat-y;
+  mask-position: -12px 0;
+  -webkit-mask-image: radial-gradient(circle at 12px 12px, transparent 12px, black 13px);
+  -webkit-mask-size: 100% 24px;
+  -webkit-mask-repeat: repeat-y;
+  -webkit-mask-position: -12px 0;
+}
+
+.torn-top {
+  clip-path: polygon(0 10px, 5% 0, 10% 10px, 15% 0, 20% 10px, 25% 0, 30% 10px, 35% 0, 40% 10px, 45% 0, 50% 10px, 55% 0, 60% 10px, 65% 0, 70% 10px, 75% 0, 80% 10px, 85% 0, 90% 10px, 95% 0, 100% 10px, 100% 100%, 0 100%);
+}
+
+.hard-shadow-cyan {
+  box-shadow: 4px 4px 0 0 var(--secondary);
+}
+.hard-shadow-cyan-hover:hover {
+  box-shadow: 8px 8px 0 0 var(--secondary);
+  transform: translate(-4px, -4px);
+}

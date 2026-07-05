@@ -1,0 +1,311 @@
+"use client";
+import { useState, useEffect, Suspense } from "react";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { load } from "@cashfreepayments/cashfree-js";
+
+function RegisterForm() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const source = searchParams.get("source");
+  const basePrice = 20;
+
+  const [bogoEnabled, setBogoEnabled] = useState(false);
+  const [donationEnabled, setDonationEnabled] = useState(false);
+  const [donationAmount, setDonationAmount] = useState(0);
+
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+
+  const [guestName, setGuestName] = useState("");
+  const [guestPhone, setGuestPhone] = useState("");
+  const [guestEmail, setGuestEmail] = useState("");
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const phoneRegex = /^[6-9]\d{9}$/;
+  const isPhoneValid = phone === "" || phoneRegex.test(phone);
+  const isGuestPhoneValid = !bogoEnabled || guestPhone === "" || phoneRegex.test(guestPhone);
+  const isFormValid = name && email && phoneRegex.test(phone) && (!bogoEnabled || (guestName && guestEmail && phoneRegex.test(guestPhone)));
+
+  const total = basePrice + (donationEnabled ? donationAmount : 0);
+
+  const [cashfree, setCashfree] = useState<any>(null);
+
+  useEffect(() => {
+    load({ mode: "sandbox" }).then((cf) => setCashfree(cf));
+
+    // Restore form data if returning from checkout
+    const savedStateStr = sessionStorage.getItem("myf_register_state");
+    if (savedStateStr) {
+      try {
+        const savedState = JSON.parse(savedStateStr);
+        setBogoEnabled(savedState.bogoEnabled);
+        setDonationEnabled(savedState.donationEnabled);
+        setDonationAmount(savedState.donationAmount);
+        setName(savedState.name);
+        setPhone(savedState.phone);
+        setEmail(savedState.email);
+        setGuestName(savedState.guestName);
+        setGuestPhone(savedState.guestPhone);
+        setGuestEmail(savedState.guestEmail);
+      } catch (e) {
+        console.error("Failed to restore state", e);
+      }
+    }
+  }, []);
+
+
+
+  const handlePay = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (isLoading || !cashfree) return;
+
+    setIsLoading(true);
+    setErrorMsg("");
+
+    // Save state before redirecting
+    sessionStorage.setItem("myf_register_state", JSON.stringify({
+      bogoEnabled, donationEnabled, donationAmount, name, phone, email, guestName, guestPhone, guestEmail, source
+    }));
+
+    try {
+      // 1. Create Order
+      const payload = {
+        amount: total,
+        name,
+        phone,
+        email,
+        source,
+        bogo: bogoEnabled,
+        guest_name: guestName,
+        guest_phone: guestPhone,
+        guest_email: guestEmail
+      };
+
+      console.log("1. /register page - sending to create-order:", payload);
+
+      const createOrderRes = await fetch('/api/cashfree/create-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      const orderData = await createOrderRes.json();
+
+      if (!orderData.paymentSessionId) {
+        throw new Error(orderData.error || "Failed to create order");
+      }
+
+      // 2. Open Cashfree Checkout
+      const checkoutOptions = {
+        paymentSessionId: orderData.paymentSessionId,
+        redirectTarget: "_self" as const,
+      };
+
+      await cashfree.checkout(checkoutOptions);
+    } catch (err: any) {
+      setErrorMsg(err.message || "An error occurred during payment.");
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="bg-[var(--color-primary-container)] min-h-screen text-[var(--color-on-surface)] font-body md:flex md:flex-col md:items-center overflow-x-hidden">
+
+      {/* Top Navigation */}
+      <header className="w-full max-w-7xl flex justify-between items-center px-6 py-4 border-b border-[var(--color-outline-variant)]/30 sticky top-0 bg-[var(--color-primary-container)]/90 backdrop-blur-md z-50">
+        <Link className="flex items-center gap-2 text-[var(--color-secondary)] transition-transform active:scale-95" href="/">
+          <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>arrow_back</span>
+          <span className="font-label-caps uppercase">Back</span>
+        </Link>
+        <div className="text-lg md:text-3xl font-black text-[var(--color-secondary)] tracking-tight font-display">
+          MEGA YOUTH FESTIVAL 2026
+        </div>
+        <div className="w-10"></div>
+      </header>
+
+      <main className="w-full max-w-7xl px-6 py-16 flex flex-col gap-8 lg:grid lg:grid-cols-12 lg:gap-12 lg:items-start">
+
+        {/* Header Section */}
+        <div className="lg:col-span-12 flex flex-col gap-4">
+          <div className="inline-flex items-center gap-2 bg-[var(--color-on-tertiary-container)] text-[var(--color-surface-container-lowest)] font-label-caps px-4 py-2 self-start uppercase">
+            <span className="material-symbols-outlined text-[16px]">location_on</span>
+            19 July · Golf Ground, Dhanbad
+          </div>
+          <h1 className="text-5xl md:text-7xl font-black text-[var(--color-on-surface)] uppercase drop-shadow-[4px_4px_0_var(--color-secondary)] font-display tracking-tight">
+            Apna Seat Confirm Kariye
+          </h1>
+          <p className="text-xl text-[var(--color-on-surface-variant)] max-w-2xl">
+            Registration aur payment ek hi step hai — turant confirm ho jaayega.
+          </p>
+        </div>
+
+        <form onSubmit={handlePay} className="lg:col-span-8 flex flex-col gap-8 w-full">
+
+          {/* Primary Form Fields */}
+          <div className="bg-[#000000] p-6 border border-[var(--color-secondary)] hard-shadow-cyan">
+            <div className="flex justify-between items-center mb-6 border-b border-[var(--color-outline-variant)]/30 pb-2">
+              <h3 className="font-label-caps text-[var(--color-secondary)] uppercase">Your Details</h3>
+              <span className="text-xl font-bold text-[var(--color-secondary)] font-display">₹20</span>
+            </div>
+            <div className="flex flex-col gap-6">
+              <div className="flex flex-col gap-1">
+                <label className="font-label-caps text-[var(--color-secondary)] uppercase">Full Name</label>
+                <input required value={name} onChange={e => setName(e.target.value)} className="bg-[#000000] border-0 border-b-2 border-[var(--color-secondary)] focus:ring-0 focus:border-[var(--color-secondary)] text-[var(--color-on-surface)] font-body py-2 px-0 w-full placeholder:text-[var(--color-on-surface-variant)]/50" placeholder="Enter your full name" type="text" />
+                <span className="text-[12px] text-gray-500 mt-1">Apna pura naam likhein — jaise gate pe pehchaan ho sake</span>
+              </div>
+              <div className="flex flex-col gap-1">
+                <label className="font-label-caps text-[var(--color-secondary)] uppercase">Phone Number</label>
+                <input required value={phone} onChange={e => setPhone(e.target.value)} className="bg-[#000000] border-0 border-b-2 border-[var(--color-secondary)] focus:ring-0 focus:border-[var(--color-secondary)] text-[var(--color-on-surface)] font-body py-2 px-0 w-full placeholder:text-[var(--color-on-surface-variant)]/50" placeholder="10-digit mobile number" type="tel" maxLength={10} />
+                {!isPhoneValid && <span className="text-red-500 text-sm mt-1">Enter a valid 10-digit mobile number</span>}
+                {isPhoneValid && <span className="text-[12px] text-gray-500 mt-1">Sahi number aur email dein — aapka pass isi par bhega jayega</span>}
+              </div>
+              <div className="flex flex-col gap-1">
+                <label className="font-label-caps text-[var(--color-secondary)] uppercase">Email Address</label>
+                <input required value={email} onChange={e => setEmail(e.target.value)} className="bg-[#000000] border-0 border-b-2 border-[var(--color-secondary)] focus:ring-0 focus:border-[var(--color-secondary)] text-[var(--color-on-surface)] font-body py-2 px-0 w-full placeholder:text-[var(--color-on-surface-variant)]/50" placeholder="you@example.com" type="email" />
+                <span className="text-[12px] text-gray-500 mt-1">Sahi number aur email dein — aapka pass isi par bhega jayega</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Order Summary Card */}
+          <div className="bg-[#000000] border border-[var(--color-secondary)] p-6 relative overflow-hidden group hover:border-[4px] transition-all duration-150 hard-shadow-cyan">
+            <div className="absolute left-0 top-0 bottom-0 w-6 ticket-edge bg-[var(--color-primary-container)] border-r border-[var(--color-secondary)] group-hover:border-r-[4px]"></div>
+            <div className="pl-8 flex flex-col gap-4 relative z-10">
+              <div className="flex justify-between items-start border-b border-[var(--color-outline-variant)]/30 pb-4">
+                <div>
+                  <h2 className="text-2xl font-bold text-[var(--color-on-surface)] group-hover:text-[var(--color-secondary)] transition-colors uppercase font-display">One time offer</h2>
+                  <span className="font-label-caps text-[var(--color-on-surface-variant)] mt-1 block">General Admission — Buy 1, Get 1 Free</span>
+                </div>
+                <div className="bg-[#00ffd1]/20 text-[#00ffd1] border border-[#00ffd1]/50 px-3 py-1 text-sm font-bold tracking-widest uppercase">FREE</div>
+              </div>
+
+              {/* BOGO Toggle */}
+              <div className="pt-2 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <span className="material-symbols-outlined text-[var(--color-secondary)]" style={{ fontVariationSettings: "'FILL' 1" }}>group</span>
+                  <span className="font-label-caps uppercase text-[var(--color-secondary)]">Ek dost ko free mein laao (BOGO)</span>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" className="sr-only peer" checked={bogoEnabled} onChange={(e) => setBogoEnabled(e.target.checked)} />
+                  <div className="w-11 h-6 bg-[var(--color-surface-container-high)] peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-[var(--color-secondary)] rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[var(--color-secondary)]"></div>
+                </label>
+              </div>
+
+              {/* BOGO Fields */}
+              {bogoEnabled && (
+                <div className="flex-col gap-4 mt-4 p-4 border border-dashed border-[var(--color-secondary)]/50 bg-[var(--color-surface)]/50 flex">
+                  <div className="flex flex-col gap-1">
+                    <label className="font-label-caps text-[var(--color-secondary)] uppercase">Guest Name</label>
+                    <input required value={guestName} onChange={e => setGuestName(e.target.value)} className="bg-[#000000] border-0 border-b-2 border-[var(--color-secondary)] focus:ring-0 focus:border-[var(--color-secondary)] text-[var(--color-on-surface)] font-body py-2 px-0 w-full placeholder:text-[var(--color-on-surface-variant)]/50" placeholder="Enter guest name" type="text" />
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <label className="font-label-caps text-[var(--color-secondary)] uppercase">Guest Phone Number</label>
+                    <input required value={guestPhone} onChange={e => setGuestPhone(e.target.value)} className="bg-[#000000] border-0 border-b-2 border-[var(--color-secondary)] focus:ring-0 focus:border-[var(--color-secondary)] text-[var(--color-on-surface)] font-body py-2 px-0 w-full placeholder:text-[var(--color-on-surface-variant)]/50" placeholder="10-digit mobile number" type="tel" maxLength={10} />
+                    {!isGuestPhoneValid && <span className="text-red-500 text-sm mt-1">Enter a valid 10-digit mobile number</span>}
+                    {isGuestPhoneValid && <span className="text-[12px] text-gray-500 mt-1">Sahi number aur email dein — aapka pass isi par bhega jayega</span>}
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <label className="font-label-caps text-[var(--color-secondary)] uppercase">Guest Email Address</label>
+                    <input required value={guestEmail} onChange={e => setGuestEmail(e.target.value)} className="bg-[#000000] border-0 border-b-2 border-[var(--color-secondary)] focus:ring-0 focus:border-[var(--color-secondary)] text-[var(--color-on-surface)] font-body py-2 px-0 w-full placeholder:text-[var(--color-on-surface-variant)]/50" placeholder="guest@example.com" type="email" />
+                    <span className="text-[12px] text-gray-500 mt-1">Sahi number aur email dein — aapka pass isi par bhega jayega</span>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Checkout Action Column */}
+          <div className="bg-[#000000] border border-dashed border-[var(--color-secondary)] p-6 hard-shadow-cyan relative overflow-hidden">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <span className="material-symbols-outlined text-[var(--color-secondary)]">volunteer_activism</span>
+                <h3 className="font-label-caps text-[var(--color-secondary)] uppercase">Support DHanbad's Biggest Rath Yatra (Optional)</h3>
+              </div>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" className="sr-only peer" checked={donationEnabled} onChange={(e) => setDonationEnabled(e.target.checked)} />
+                <div className="w-11 h-6 bg-[var(--color-surface-container-high)] peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-[var(--color-secondary)] rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[var(--color-secondary)]"></div>
+              </label>
+            </div>
+            <p className="text-[var(--color-on-surface-variant)] text-base mb-6">Help us make the festival grander. Your contribution goes directly to the Rath Yatra preparations.</p>
+
+            {donationEnabled && (
+              <div className="flex flex-wrap gap-3">
+                {[11, 51, 101, 251, 501].map(amount => (
+                  <button
+                    key={amount}
+                    type="button"
+                    onClick={() => setDonationAmount(amount)}
+                    className={`px-4 py-2 border border-[var(--color-secondary)]/30 font-label-caps transition-colors ${donationAmount === amount ? 'bg-[var(--color-secondary)] text-[#000000]' : 'text-[var(--color-secondary)] hover:bg-[var(--color-secondary)]/10'}`}
+                  >
+                    ₹{amount}
+                  </button>
+                ))}
+                <div className="relative flex-1 min-w-[120px]">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-secondary)]">₹</span>
+                  <input
+                    type="number"
+                    placeholder="Custom"
+                    value={donationAmount || ''}
+                    onChange={(e) => setDonationAmount(parseInt(e.target.value) || 0)}
+                    className="w-full bg-transparent border border-[var(--color-secondary)]/30 pl-7 pr-3 py-2 text-[var(--color-on-surface)] focus:border-[var(--color-secondary)] focus:ring-0 font-label-caps"
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+
+        </form>
+
+        {/* Right Sticky Sidebar */}
+        <div className="lg:col-span-4 lg:sticky lg:top-24 flex flex-col gap-4 w-full">
+          {errorMsg && (
+            <div className="bg-red-500/20 border border-red-500 text-red-200 px-4 py-3 text-sm">
+              {errorMsg}
+            </div>
+          )}
+          <div className="bg-[#000000] border border-[var(--color-outline-variant)]/30 p-6 flex flex-col gap-6 relative overflow-hidden">
+            <div className="absolute -top-10 -right-10 w-32 h-32 bg-[var(--color-secondary)]/10 rounded-full blur-2xl"></div>
+            <div className="flex justify-between items-center border-b border-[var(--color-outline-variant)]/30 pb-4">
+              <span className="font-label-caps text-[var(--color-on-surface-variant)] uppercase">Total Payable</span>
+              <span className="text-3xl font-black text-[var(--color-secondary)] font-display">₹{total}</span>
+            </div>
+
+            <button
+              type="submit"
+              disabled={isLoading || !isFormValid}
+              onClick={(e) => {
+                const form = document.querySelector('form');
+                if (form && form.checkValidity() && isFormValid) {
+                  handlePay(e);
+                } else {
+                  form?.reportValidity();
+                }
+              }}
+              className={`w-full bg-[var(--color-secondary)] text-[#000000] text-xl font-black uppercase py-4 flex items-center justify-center gap-2 hover:bg-[var(--color-secondary-fixed)] transition-colors active:scale-95 font-display ${(isLoading || !isFormValid) ? 'opacity-50 cursor-not-allowed' : ''}`}
+            >
+              {isLoading ? "PROCESSING..." : `₹${total} PAY & REGISTER`}
+              {!isLoading && <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>arrow_forward</span>}
+            </button>
+            <div className="flex items-center justify-center gap-2 text-[var(--color-on-surface-variant)] font-label-caps text-[12px] uppercase mt-2">
+              <span className="material-symbols-outlined text-[16px]">lock</span>
+              Secure payment via Cashfree
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  );
+}
+
+export default function Register() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[var(--color-primary-container)] text-white p-8">Loading...</div>}>
+      <RegisterForm />
+    </Suspense>
+  );
+}
