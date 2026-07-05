@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export default function FinalCTA() {
+export default function FinalCTA({ source = "paid-angle1" }: { source?: string }) {
   return (
     <section className="py-24 px-6 bg-gradient-to-b from-[var(--color-surface)] to-[var(--color-primary-container)]/30 border-t border-[var(--color-outline-variant)]/20 font-body">
       <div className="max-w-4xl mx-auto text-center">
@@ -9,7 +9,7 @@ export default function FinalCTA() {
         
         <div className="inline-block relative group">
           <div className="absolute -inset-4 bg-[var(--color-secondary)]/20 blur-xl group-hover:bg-[var(--color-secondary)]/40 transition-all rounded-full"></div>
-          <Link href="/register" className="relative flex min-w-[320px] cursor-pointer items-center justify-center rounded-none h-20 px-12 bg-[var(--color-secondary)] text-[var(--color-on-secondary-container)] text-2xl font-black shadow-2xl transition-all hover:scale-105 font-display">
+          <Link href={`/register?source=${source}`} className="relative flex min-w-[320px] cursor-pointer items-center justify-center rounded-none h-20 px-12 bg-[var(--color-secondary)] text-[var(--color-on-secondary-container)] text-2xl font-black shadow-2xl transition-all hover:scale-105 font-display">
             Register Kariye — ₹20
           </Link>
         </div>

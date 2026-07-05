@@ -50,18 +50,18 @@ export default function Home() {
 
   return (
     <div className="bg-[var(--color-background)] text-[var(--color-on-background)] min-h-[max(884px,100dvh)]">
-      <HeroSection />
+      <HeroSection source="paid-angle1" />
       <VideoBlock />
       <TestimonialCarousel />
       <ProblemSection />
       <SolutionSection />
-      <PricingSection />
+      <PricingSection source="paid-angle1" />
       <WhoItsForSection />
       <CredibilityStats />
       <FAQSection />
-      <FinalCTA />
+      <FinalCTA source="paid-angle1" />
       <Footer />
-      <StickyBottomBar />
+      <StickyBottomBar source="paid-angle1" />
     </div>
   );
 }

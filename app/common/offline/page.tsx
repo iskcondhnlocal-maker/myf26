@@ -55,19 +55,19 @@ export default function Angle5() {
           </>
         }
         subheadline="Sirf serious logon ke liye — 19 July."
-        source="paid-common"
+        source="common-offline"
       />
       <VideoBlock />
       <TestimonialCarousel />
       <ProblemSection />
       <SolutionSection />
-      <PricingSection source="paid-common" />
+      <PricingSection source="common-offline" />
       <WhoItsForSection />
       <CredibilityStats />
       <FAQSection />
-      <FinalCTA source="paid-common" />
+      <FinalCTA source="common-offline" />
       <Footer />
-      <StickyBottomBar source="paid-common" />
+      <StickyBottomBar source="common-offline" />
     </div>
   );
 }

@@ -55,19 +55,19 @@ export default function Angle4() {
           </>
         }
         subheadline="Office. Ghar. Phone. Repeat. Ek din isse bahar nikliye."
-        source="angle4"
+        source="paid-angle4"
       />
       <VideoBlock />
       <TestimonialCarousel />
       <ProblemSection />
       <SolutionSection />
-      <PricingSection />
+      <PricingSection source="paid-angle4" />
       <WhoItsForSection />
       <CredibilityStats />
       <FAQSection />
-      <FinalCTA />
+      <FinalCTA source="paid-angle4" />
       <Footer />
-      <StickyBottomBar />
+      <StickyBottomBar source="paid-angle4" />
     </div>
   );
 }

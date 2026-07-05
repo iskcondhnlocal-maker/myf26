@@ -55,19 +55,19 @@ export default function Angle2() {
           </>
         }
         subheadline="Ek din jo aapko sirf inspire nahi karega, balki future ke liye zyada clarity dega."
-        source="angle2"
+        source="paid-angle2"
       />
       <VideoBlock />
       <TestimonialCarousel />
       <ProblemSection />
       <SolutionSection />
-      <PricingSection />
+      <PricingSection source="paid-angle2" />
       <WhoItsForSection />
       <CredibilityStats />
       <FAQSection />
-      <FinalCTA />
+      <FinalCTA source="paid-angle2" />
       <Footer />
-      <StickyBottomBar />
+      <StickyBottomBar source="paid-angle2" />
     </div>
   );
 }

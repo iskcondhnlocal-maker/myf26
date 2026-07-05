@@ -55,19 +55,19 @@ export default function Angle3() {
           </>
         }
         subheadline="Yahan potential ko pehchana jaata hai, branch, college ya background nahi"
-        source="angle3"
+        source="paid-angle3"
       />
       <VideoBlock />
       <TestimonialCarousel />
       <ProblemSection />
       <SolutionSection />
-      <PricingSection />
+      <PricingSection source="paid-angle3" />
       <WhoItsForSection />
       <CredibilityStats />
       <FAQSection />
-      <FinalCTA />
+      <FinalCTA source="paid-angle3" />
       <Footer />
-      <StickyBottomBar />
+      <StickyBottomBar source="paid-angle3" />
     </div>
   );
 }

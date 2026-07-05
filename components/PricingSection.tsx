@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export default function PricingSection() {
+export default function PricingSection({ source = "paid-angle1" }: { source?: string }) {
   return (
     <section className="py-24 px-6 bg-[var(--color-surface-container-low)] font-body">
       <div className="max-w-4xl mx-auto">
@@ -43,7 +43,7 @@ export default function PricingSection() {
               <span className="text-6xl font-black text-white font-display">₹20</span>
               <span className="text-[var(--color-on-surface-variant)] line-through text-2xl font-display">₹499</span>
             </div>
-            <Link href="/register" className="w-full md:w-auto min-w-[300px] cursor-pointer flex items-center justify-center rounded-none h-16 px-10 bg-[var(--color-secondary)] text-[var(--color-on-secondary-container)] text-xl font-black shadow-xl transition-transform hover:scale-105 active:scale-95 font-display">
+            <Link href={`/register?source=${source}`} className="w-full md:w-auto min-w-[300px] cursor-pointer flex items-center justify-center rounded-none h-16 px-10 bg-[var(--color-secondary)] text-[var(--color-on-secondary-container)] text-xl font-black shadow-xl transition-transform hover:scale-105 active:scale-95 font-display">
               Claim Your Seat Now
             </Link>
             <p className="text-[var(--color-on-surface-variant)] mt-4 text-sm">*Sirf pehle 500 registrations ke liye special price</p>
