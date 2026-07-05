@@ -36,7 +36,7 @@ function RegisterForm() {
   const [cashfree, setCashfree] = useState<any>(null);
 
   useEffect(() => {
-    load({ mode: "sandbox" }).then((cf) => setCashfree(cf));
+    load({ mode: "sandbox" }).then((cf: any) => setCashfree(cf));
 
     // Restore form data if returning from checkout
     const savedStateStr = sessionStorage.getItem("myf_register_state");
