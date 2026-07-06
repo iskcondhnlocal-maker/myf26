@@ -23,7 +23,7 @@ export default function TestimonialCarousel() {
     },
     {
       name: "Roshan – 3rd Year MBBS, PMCH Dhanbad",
-      quote: "Medical studies ke pressure ke beech yeh event ek refreshing experience tha. Sessions ne stress ko একত্রে handle karna sikhaya aur mentors se baat karke kaafi grounded feel hua. Din kaafi meaningful raha.",
+      quote: "Medical studies ke pressure ke beech yeh event ek refreshing experience tha. Sessions ne stress ko handle karna sikhaya aur mentors se baat karke kaafi grounded feel hua. Din kaafi meaningful raha.",
       image: "/4. Roshan – 3rd Year MBBS, PMCH Dhanbad.png",
     },
     {
