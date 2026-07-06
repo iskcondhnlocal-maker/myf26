@@ -117,15 +117,17 @@ function RegisterForm() {
     <div className="bg-[var(--color-primary-container)] min-h-screen text-[var(--color-on-surface)] font-body md:flex md:flex-col md:items-center overflow-x-hidden">
 
       {/* Top Navigation */}
-      <header className="w-full max-w-7xl flex justify-between items-center px-6 py-4 border-b border-[var(--color-outline-variant)]/30 sticky top-0 bg-[var(--color-primary-container)]/90 backdrop-blur-md z-50">
-        <Link className="flex items-center gap-2 text-[var(--color-secondary)] transition-transform active:scale-95" href="/">
+      <header className="w-full max-w-7xl relative flex justify-between items-center px-4 sm:px-6 py-4 border-b border-[var(--color-outline-variant)]/30 sticky top-0 bg-[var(--color-primary-container)]/90 backdrop-blur-md z-50 overflow-hidden">
+        <Link className="flex items-center gap-1 sm:gap-2 text-[var(--color-secondary)] transition-transform active:scale-95 z-10" href="/">
           <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>arrow_back</span>
-          <span className="font-label-caps uppercase">Back</span>
+          <span className="font-label-caps uppercase hidden sm:block">Back</span>
         </Link>
-        <div className="text-lg md:text-3xl font-black text-[var(--color-secondary)] tracking-tight font-display">
-          MEGA YOUTH FESTIVAL 2026
+        
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap pointer-events-none w-full text-center px-[4.5rem] sm:px-24">
+          <span className="text-[clamp(13px,4.5vw,30px)] md:text-3xl font-black text-[var(--color-secondary)] tracking-tight font-display">
+            MEGA YOUTH FESTIVAL 2026
+          </span>
         </div>
-        <div className="w-10"></div>
       </header>
 
       <main className="w-full max-w-7xl px-6 py-16 flex flex-col gap-8 lg:grid lg:grid-cols-12 lg:gap-12 lg:items-start">
@@ -176,21 +178,23 @@ function RegisterForm() {
           <div className="bg-[#000000] border border-[var(--color-secondary)] p-6 relative overflow-hidden group hover:border-[4px] transition-all duration-150 hard-shadow-cyan">
             <div className="absolute left-0 top-0 bottom-0 w-6 ticket-edge bg-[var(--color-primary-container)] border-r border-[var(--color-secondary)] group-hover:border-r-[4px]"></div>
             <div className="pl-8 flex flex-col gap-4 relative z-10">
-              <div className="flex justify-between items-start border-b border-[var(--color-outline-variant)]/30 pb-4">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start border-b border-[var(--color-outline-variant)]/30 pb-4 gap-3">
                 <div>
-                  <h2 className="text-2xl font-bold text-[var(--color-on-surface)] group-hover:text-[var(--color-secondary)] transition-colors uppercase font-display">One time offer</h2>
-                  <span className="font-label-caps text-[var(--color-on-surface-variant)] mt-1 block">General Admission — Buy 1, Get 1 Free</span>
+                  <h2 className="text-xl sm:text-2xl font-bold text-[var(--color-on-surface)] group-hover:text-[var(--color-secondary)] transition-colors uppercase font-display leading-tight flex items-center flex-wrap gap-2">
+                    One time offer
+                    <span className="bg-[#00ffd1]/20 text-[#00ffd1] border border-[#00ffd1]/50 px-2 py-0.5 text-xs sm:text-sm font-bold tracking-widest uppercase inline-block">FREE</span>
+                  </h2>
+                  <span className="font-label-caps text-sm sm:text-base text-[var(--color-on-surface-variant)] mt-1 block">General Admission — Buy 1, Get 1 Free</span>
                 </div>
-                <div className="bg-[#00ffd1]/20 text-[#00ffd1] border border-[#00ffd1]/50 px-3 py-1 text-sm font-bold tracking-widest uppercase">FREE</div>
               </div>
 
               {/* BOGO Toggle */}
-              <div className="pt-2 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <span className="material-symbols-outlined text-[var(--color-secondary)]" style={{ fontVariationSettings: "'FILL' 1" }}>group</span>
-                  <span className="font-label-caps uppercase text-[var(--color-secondary)]">Ek dost ko free mein laao (BOGO)</span>
+              <div className="pt-2 flex items-start sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-2 sm:gap-3 flex-1">
+                  <span className="material-symbols-outlined text-[var(--color-secondary)] shrink-0" style={{ fontVariationSettings: "'FILL' 1" }}>group</span>
+                  <span className="font-label-caps uppercase text-[var(--color-secondary)] text-sm sm:text-base leading-tight">Ek dost ko free mein laao (BOGO)</span>
                 </div>
-                <label className="relative inline-flex items-center cursor-pointer">
+                <label className="relative inline-flex items-center cursor-pointer shrink-0 mt-1 sm:mt-0">
                   <input type="checkbox" className="sr-only peer" checked={bogoEnabled} onChange={(e) => setBogoEnabled(e.target.checked)} />
                   <div className="w-11 h-6 bg-[var(--color-surface-container-high)] peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-[var(--color-secondary)] rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[var(--color-secondary)]"></div>
                 </label>

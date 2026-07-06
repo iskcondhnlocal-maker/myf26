@@ -1,8 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
 
 export default function TestimonialCarousel() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  
   const testimonials = [
     {
       name: "Ashish – Graduation Student, PK Roy College | SSC Aspirant",
@@ -21,7 +23,7 @@ export default function TestimonialCarousel() {
     },
     {
       name: "Roshan – 3rd Year MBBS, PMCH Dhanbad",
-      quote: "Medical studies ke pressure ke beech yeh event ek refreshing experience tha. Sessions ne stress ko better handle karna sikhaya aur mentors se baat karke kaafi grounded feel hua. Din kaafi meaningful raha.",
+      quote: "Medical studies ke pressure ke beech yeh event ek refreshing experience tha. Sessions ne stress ko একত্রে handle karna sikhaya aur mentors se baat karke kaafi grounded feel hua. Din kaafi meaningful raha.",
       image: "/4. Roshan – 3rd Year MBBS, PMCH Dhanbad.png",
     },
     {
@@ -46,24 +48,65 @@ export default function TestimonialCarousel() {
     }
   ];
 
-  const duplicatedTestimonials = [...testimonials, ...testimonials];
+  const duplicatedTestimonials = [...testimonials, ...testimonials, ...testimonials];
+
+  useEffect(() => {
+    let animationId: number;
+    let isHovering = false;
+    let lastTime = 0;
+    
+    const scrollContainer = scrollRef.current;
+    if (!scrollContainer) return;
+
+    const scroll = (timestamp: number) => {
+      if (!lastTime) lastTime = timestamp;
+      const deltaTime = timestamp - lastTime;
+      
+      if (!isHovering && deltaTime > 16) {
+        scrollContainer.scrollLeft += 1;
+        
+        // Reset scroll position for infinite loop effect
+        if (scrollContainer.scrollLeft >= scrollContainer.scrollWidth / 3) {
+          scrollContainer.scrollLeft -= scrollContainer.scrollWidth / 3;
+        }
+        
+        lastTime = timestamp;
+      }
+      animationId = requestAnimationFrame(scroll);
+    };
+    
+    animationId = requestAnimationFrame(scroll);
+    
+    const handleMouseEnter = () => isHovering = true;
+    const handleMouseLeave = () => isHovering = false;
+    const handleTouchStart = () => isHovering = true;
+    const handleTouchEnd = () => {
+      setTimeout(() => isHovering = false, 2000);
+    };
+
+    scrollContainer.addEventListener('mouseenter', handleMouseEnter);
+    scrollContainer.addEventListener('mouseleave', handleMouseLeave);
+    scrollContainer.addEventListener('touchstart', handleTouchStart);
+    scrollContainer.addEventListener('touchend', handleTouchEnd);
+    
+    return () => {
+      cancelAnimationFrame(animationId);
+      if (scrollContainer) {
+        scrollContainer.removeEventListener('mouseenter', handleMouseEnter);
+        scrollContainer.removeEventListener('mouseleave', handleMouseLeave);
+        scrollContainer.removeEventListener('touchstart', handleTouchStart);
+        scrollContainer.removeEventListener('touchend', handleTouchEnd);
+      }
+    };
+  }, []);
 
   return (
-    <div className="overflow-hidden py-8 font-body relative w-full">
-      <style>{`
-        @keyframes marquee {
-          0% { transform: translateX(0%); }
-          100% { transform: translateX(-50%); }
-        }
-        .animate-marquee {
-          animation: marquee 60s linear infinite;
-        }
-        .animate-marquee:hover {
-          animation-play-state: paused;
-        }
-      `}</style>
-      
-      <div className="flex animate-marquee items-stretch w-max gap-6 px-4">
+    <div className="py-8 font-body relative w-full">
+      <div 
+        ref={scrollRef}
+        className="flex items-stretch gap-6 px-4 overflow-x-auto scrollbar-hide w-full"
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+      >
         {duplicatedTestimonials.map((testimonial, idx) => (
           <div key={idx} className="flex h-auto w-80 sm:w-96 flex-col gap-4 rounded-2xl bg-[var(--color-surface-container-low)] p-4 border border-[var(--color-outline-variant)]/20 shadow-lg shrink-0">
             <div
@@ -74,10 +117,10 @@ export default function TestimonialCarousel() {
               }}
             ></div>
             <div className="px-2 flex flex-col justify-between flex-grow">
-              <p className="text-white text-[15px] leading-relaxed italic mb-4">
+              <p className="text-white text-[15px] leading-relaxed italic mb-4 select-none pointer-events-none">
                 "{testimonial.quote}"
               </p>
-              <p className="text-[var(--color-secondary)] text-sm font-bold mt-auto">
+              <p className="text-[var(--color-secondary)] text-sm font-bold mt-auto select-none pointer-events-none">
                 — {testimonial.name}
               </p>
             </div>

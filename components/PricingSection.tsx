@@ -40,8 +40,8 @@ export default function PricingSection({ source = "paid-angle1" }: { source?: st
           <div className="text-center pt-8 border-t border-[var(--color-outline-variant)]/30">
             <p className="label-caps text-[var(--color-on-surface-variant)] mb-2">Registration Fee</p>
             <div className="flex items-baseline justify-center gap-2 mb-8">
-              <span className="text-6xl font-black text-white font-display">₹20</span>
-              <span className="text-[var(--color-on-surface-variant)] line-through text-2xl font-display">₹499</span>
+              <span className="text-7xl md:text-8xl font-black text-white font-display">₹20</span>
+              <span className="text-[var(--color-on-surface-variant)] line-through text-3xl md:text-4xl font-display">₹499</span>
             </div>
             <Link href={`/register?source=${source}`} className="w-full md:w-auto min-w-[300px] cursor-pointer flex items-center justify-center rounded-none h-16 px-10 bg-[var(--color-secondary)] text-[var(--color-on-secondary-container)] text-xl font-black shadow-xl transition-transform hover:scale-105 active:scale-95 font-display">
               Claim Your Seat Now
