@@ -10,7 +10,7 @@ function RegisterForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const source = searchParams.get("source") || "offline";
-  const basePrice = 1;
+  const basePrice = 20;
 
   const [bogoEnabled, setBogoEnabled] = useState(false);
   const [donationEnabled, setDonationEnabled] = useState(false);
@@ -171,7 +171,7 @@ function RegisterForm() {
           <div className="bg-[#000000] p-6 border border-[var(--color-secondary)] hard-shadow-cyan">
             <div className="flex justify-between items-center mb-6 border-b border-[var(--color-outline-variant)]/30 pb-2">
               <h3 className="font-label-caps text-[var(--color-secondary)] uppercase">Your Details</h3>
-              <span className="text-xl font-bold text-[var(--color-secondary)] font-display">₹1</span>
+              <span className="text-xl font-bold text-[var(--color-secondary)] font-display">₹20</span>
             </div>
             <div className="flex flex-col gap-6">
               <div className="flex flex-col gap-1">

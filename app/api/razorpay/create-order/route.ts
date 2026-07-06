@@ -25,7 +25,7 @@ export async function POST(req: Request) {
     const randomSuffix = Math.floor(Math.random() * 1000);
     const our_order_id = `MYF26-${timestamp}-${randomSuffix}`;
     
-    const order_amount = amount || 1;
+    const order_amount = amount || 20;
 
     const options = {
       amount: order_amount * 100, // amount in the smallest currency unit
