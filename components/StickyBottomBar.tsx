@@ -8,7 +8,7 @@ export default function StickyBottomBar({ source = "paid-angle1" }: { source?: s
           <p className="text-[10px] sm:text-xs label-caps text-[var(--color-secondary)]">Ends Soon</p>
           <p className="text-base sm:text-lg font-bold text-white leading-tight">₹20 <span className="text-[10px] sm:text-xs text-[var(--color-on-surface-variant)] line-through font-normal">₹499</span></p>
         </div>
-        <Link href={`/register?source=${source}`} className="flex-1 max-w-[200px] text-center bg-[var(--color-secondary)] text-[var(--color-on-secondary-container)] px-2 sm:px-6 py-2.5 sm:py-3 rounded-none font-bold text-[13px] sm:text-sm shadow-lg shadow-[var(--color-secondary)]/20 transition-transform active:scale-95 hover:scale-105 shrink-0 whitespace-nowrap">
+        <Link data-gtm-cta="register-intent" href={`/register?source=${source}`} className="flex-1 max-w-[200px] text-center bg-[var(--color-secondary)] text-[var(--color-on-secondary-container)] px-2 sm:px-6 py-2.5 sm:py-3 rounded-none font-bold text-[13px] sm:text-sm shadow-lg shadow-[var(--color-secondary)]/20 transition-transform active:scale-95 hover:scale-105 shrink-0 whitespace-nowrap">
           Register Now
         </Link>
       </div>

@@ -42,7 +42,7 @@ export default function HeroSection({
               </h2>
             </div>
             <div className="flex flex-col items-center gap-4 mt-4">
-              <Link href={`/register?source=${source}`} className="flex min-w-[120px] cursor-pointer items-center justify-center rounded-none h-14 px-8 bg-[var(--color-secondary)] text-[var(--color-on-secondary-container)] text-lg font-bold shadow-2xl transition-transform hover:scale-105 active:scale-95">
+              <Link data-gtm-cta="register-intent" href={`/register?source=${source}`} className="flex min-w-[120px] cursor-pointer items-center justify-center rounded-none h-14 px-8 bg-[var(--color-secondary)] text-[var(--color-on-secondary-container)] text-lg font-bold shadow-2xl transition-transform hover:scale-105 active:scale-95">
                 <span className="truncate">₹20 Mein Register Karo</span>
               </Link>
               <p className="text-[var(--color-on-surface-variant)] text-sm font-medium flex items-center gap-2 font-body">

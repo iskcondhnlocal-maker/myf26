@@ -163,7 +163,7 @@ export async function POST(req: Request) {
       }
     }
 
-    return NextResponse.json({ success: true, tickets: ticketsCreated });
+    return NextResponse.json({ success: true, tickets: ticketsCreated, amount: orderAmount });
   } catch (error: any) {
     console.error('Error verifying Cashfree order:', error.response?.data || error);
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });

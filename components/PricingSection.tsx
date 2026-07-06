@@ -43,7 +43,7 @@ export default function PricingSection({ source = "paid-angle1" }: { source?: st
               <span className="text-7xl md:text-8xl font-black text-white font-display">₹20</span>
               <span className="text-[var(--color-on-surface-variant)] line-through text-3xl md:text-4xl font-display">₹499</span>
             </div>
-            <Link href={`/register?source=${source}`} className="w-full md:w-auto min-w-[300px] cursor-pointer flex items-center justify-center rounded-none h-16 px-10 bg-[var(--color-secondary)] text-[var(--color-on-secondary-container)] text-xl font-black shadow-xl transition-transform hover:scale-105 active:scale-95 font-display">
+            <Link data-gtm-cta="register-intent" href={`/register?source=${source}`} className="w-full md:w-auto min-w-[300px] cursor-pointer flex items-center justify-center rounded-none h-16 px-10 bg-[var(--color-secondary)] text-[var(--color-on-secondary-container)] text-xl font-black shadow-xl transition-transform hover:scale-105 active:scale-95 font-display">
               Claim Your Seat Now
             </Link>
             <p className="text-[var(--color-on-surface-variant)] mt-4 text-sm">*Sirf pehle 500 registrations ke liye special price</p>

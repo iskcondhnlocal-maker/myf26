@@ -48,6 +48,18 @@ function ThankYouContent() {
           setTickets(data.tickets || []);
           setStatus("success");
           sessionStorage.removeItem("myf_register_state");
+          
+          // Push successful purchase event to GTM dataLayer
+          if (typeof window !== "undefined") {
+            const dataLayer = (window as any).dataLayer || [];
+            dataLayer.push({
+              event: "purchase",
+              value: data.amount,
+              currency: "INR",
+              transaction_id: orderId
+            });
+            (window as any).dataLayer = dataLayer;
+          }
         } else {
           setStatus("error");
           setErrorMessage(data.error || "Payment verification failed.");

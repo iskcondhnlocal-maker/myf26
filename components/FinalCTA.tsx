@@ -9,7 +9,7 @@ export default function FinalCTA({ source = "paid-angle1" }: { source?: string }
         
         <div className="inline-block relative group">
           <div className="absolute -inset-4 bg-[var(--color-secondary)]/20 blur-xl group-hover:bg-[var(--color-secondary)]/40 transition-all rounded-full"></div>
-          <Link href={`/register?source=${source}`} className="relative flex min-w-[320px] cursor-pointer items-center justify-center rounded-none h-20 px-12 bg-[var(--color-secondary)] text-[var(--color-on-secondary-container)] text-2xl font-black shadow-2xl transition-all hover:scale-105 font-display">
+          <Link data-gtm-cta="register-intent" href={`/register?source=${source}`} className="relative flex min-w-[320px] cursor-pointer items-center justify-center rounded-none h-20 px-12 bg-[var(--color-secondary)] text-[var(--color-on-secondary-container)] text-2xl font-black shadow-2xl transition-all hover:scale-105 font-display">
             Register Kariye — ₹20
           </Link>
         </div>

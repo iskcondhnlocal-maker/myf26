@@ -283,14 +283,15 @@ function RegisterForm() {
               type="submit"
               disabled={isLoading || !isFormValid}
               onClick={(e) => {
-                const form = document.querySelector('form');
-                if (form && form.checkValidity() && isFormValid) {
-                  handlePay(e);
-                } else {
+                if (!isFormValid) {
+                  const form = document.querySelector('form');
                   form?.reportValidity();
+                } else {
+                  handlePay(e);
                 }
               }}
               className={`w-full bg-[var(--color-secondary)] text-[#000000] text-xl font-black uppercase py-4 flex items-center justify-center gap-2 hover:bg-[var(--color-secondary-fixed)] transition-colors active:scale-95 font-display ${(isLoading || !isFormValid) ? 'opacity-50 cursor-not-allowed' : ''}`}
+              data-gtm-cta="payment-submit"
             >
               {isLoading ? "PROCESSING..." : `₹${total} PAY & REGISTER`}
               {!isLoading && <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>arrow_forward</span>}
