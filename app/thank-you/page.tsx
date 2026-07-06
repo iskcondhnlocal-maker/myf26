@@ -52,6 +52,14 @@ function ThankYouContent() {
           // Push successful purchase event to GTM dataLayer
           if (typeof window !== "undefined") {
             const dataLayer = (window as any).dataLayer || [];
+            
+            console.log("Pushing purchase event to dataLayer:", {
+              event: "purchase",
+              value: data.amount,
+              currency: "INR",
+              transaction_id: orderId
+            });
+            
             dataLayer.push({
               event: "purchase",
               value: data.amount,
