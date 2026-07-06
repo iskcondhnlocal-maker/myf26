@@ -42,7 +42,7 @@ export async function POST(req: Request) {
 
     // amount is in paise
     const orderAmount = Number(payment.amount) / 100;
-    const donationAmount = Math.max(0, orderAmount - 20);
+    const donationAmount = Math.max(0, orderAmount - 1);
 
     const ticketsCreated = await processWebhookAndTickets({
       orderId,
