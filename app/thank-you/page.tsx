@@ -6,6 +6,9 @@ import { useSearchParams, useRouter } from "next/navigation";
 function ThankYouContent() {
   const searchParams = useSearchParams();
   const orderId = searchParams.get("order_id");
+  const razorpayPaymentId = searchParams.get("razorpay_payment_id");
+  const razorpayOrderId = searchParams.get("razorpay_order_id");
+  const razorpaySignature = searchParams.get("razorpay_signature");
 
   const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
   const [errorMessage, setErrorMessage] = useState("");
@@ -25,6 +28,9 @@ function ThankYouContent() {
 
         const payload = {
           orderId: orderId,
+          razorpay_payment_id: razorpayPaymentId,
+          razorpay_order_id: razorpayOrderId,
+          razorpay_signature: razorpaySignature,
           name: savedState.name,
           phone: savedState.phone,
           email: savedState.email,
@@ -35,9 +41,11 @@ function ThankYouContent() {
           guest_email: savedState.guestEmail
         };
 
-        console.log("3. /thank-you page - sending to verify-payment:", payload);
+        const apiRoute = razorpayPaymentId ? "/api/razorpay/verify-payment" : "/api/cashfree/verify-payment";
 
-        const res = await fetch("/api/cashfree/verify-payment", {
+        console.log(`3. /thank-you page - sending to ${apiRoute}:`, payload);
+
+        const res = await fetch(apiRoute, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload)
@@ -121,7 +129,7 @@ function ThankYouContent() {
         <div className="max-w-xl w-full flex flex-col items-center text-center relative z-10">
           {/* Celebratory Icon */}
           <div className="mb-8">
-            <span className="material-symbols-outlined text-[80px] md:text-[100px] text-[var(--color-secondary)] animate-pulse" style={{ fontVariationSettings: "'FILL' 1" }}>
+            <span className="material-symbols-outlined !text-[120px] md:!text-[150px] text-[var(--color-secondary)] animate-pulse" style={{ fontVariationSettings: "'FILL' 1" }}>
               check_circle
             </span>
           </div>
@@ -160,20 +168,32 @@ function ThankYouContent() {
           )}
           
           {/* Next Step Card */}
-          <div className="w-full bg-[var(--color-surface)]/80 backdrop-blur-md border border-[var(--color-secondary)] p-6 md:p-8 relative group transition-all duration-300 hover:border-[3px] hard-shadow-cyan">
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <span className="material-symbols-outlined text-[var(--color-secondary)]">forum</span>
-              <h2 className="font-label-caps text-[var(--color-secondary)] uppercase tracking-widest">Next Step</h2>
+          <div className="w-full bg-[var(--color-surface)]/80 backdrop-blur-md border border-[var(--color-secondary)] p-6 md:p-8 relative group transition-all duration-300 hover:border-[3px] hard-shadow-cyan text-left">
+            <div className="mb-8">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="material-symbols-outlined text-[var(--color-secondary)] text-3xl">mail</span>
+                <h2 className="font-display font-black text-[var(--color-inverse-surface)] text-2xl uppercase">Check Your Email! 📩</h2>
+              </div>
+              <p className="text-lg text-[var(--color-on-surface-variant)] leading-relaxed">
+                Apke ticket aur event ki saari important details email par bhej di gayi hain. <span className="font-bold text-[var(--color-inverse-surface)]">Spam/Promotions folder check karna mat bhoolna!</span>
+              </p>
             </div>
-            <p className="text-base text-[var(--color-on-surface-variant)] mb-8 text-left md:text-center">
-              WhatsApp group join kariye: Event updates, reminders aur last-minute details sirf WhatsApp group mein milenge.
-            </p>
+            
+            <div className="mb-6">
+              <div className="flex items-center gap-3 mb-3">
+                <span className="material-symbols-outlined text-[#25D366] text-3xl">groups</span>
+                <h2 className="font-display font-black text-[var(--color-inverse-surface)] text-2xl uppercase">Join Our Community 🚀</h2>
+              </div>
+              <p className="text-lg text-[var(--color-on-surface-variant)] leading-relaxed">
+                Event updates, schedule, aur surprises ke liye hamare official WhatsApp group ko join karein:
+              </p>
+            </div>
             
             {/* CTA Button */}
-            <Link href="#" className="block w-full bg-[var(--color-secondary)] text-[var(--color-surface)] font-display text-[20px] font-black py-4 px-6 flex items-center justify-center gap-3 transition-transform active:scale-95 hover:bg-[var(--color-inverse-surface)]">
+            <a href="https://chat.whatsapp.com/Lal2cZdnc2d8LdegxV7dUD" target="_blank" rel="noopener noreferrer" className="w-full bg-[#25D366] text-white font-display text-[20px] font-black py-4 px-6 flex items-center justify-center gap-3 transition-transform active:scale-95 hover:bg-[#1DA851]">
               <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>chat</span>
-              <span>WhatsApp Group Join Kariye →</span>
-            </Link>
+              <span>JOIN WHATSAPP GROUP ➔</span>
+            </a>
           </div>
         </div>
 

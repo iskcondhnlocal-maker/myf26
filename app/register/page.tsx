@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 // @ts-expect-error - Cashfree JS SDK does not provide TypeScript declarations
 import { load } from "@cashfreepayments/cashfree-js";
+import Script from "next/script";
 
 function RegisterForm() {
   const router = useRouter();
@@ -62,7 +63,7 @@ function RegisterForm() {
 
   const handlePay = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (isLoading || !cashfree) return;
+    if (isLoading) return;
 
     setIsLoading(true);
     setErrorMsg("");
@@ -73,7 +74,7 @@ function RegisterForm() {
     }));
 
     try {
-      // 1. Create Order
+      // 1. Create Order via Razorpay
       const payload = {
         amount: total,
         name,
@@ -86,9 +87,9 @@ function RegisterForm() {
         guest_email: guestEmail
       };
 
-      console.log("1. /register page - sending to create-order:", payload);
+      console.log("1. /register page - sending to Razorpay create-order:", payload);
 
-      const createOrderRes = await fetch('/api/cashfree/create-order', {
+      const createOrderRes = await fetch('/api/razorpay/create-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -96,17 +97,34 @@ function RegisterForm() {
 
       const orderData = await createOrderRes.json();
 
-      if (!orderData.paymentSessionId) {
+      if (!orderData.razorpay_order_id) {
         throw new Error(orderData.error || "Failed to create order");
       }
 
-      // 2. Open Cashfree Checkout
-      const checkoutOptions = {
-        paymentSessionId: orderData.paymentSessionId,
-        redirectTarget: "_self" as const,
+      // 2. Open Razorpay Checkout
+      const options = {
+        key: orderData.key_id,
+        amount: orderData.amount * 100,
+        currency: "INR",
+        order_id: orderData.razorpay_order_id,
+        name: "Mega Youth Festival 2026",
+        description: "MYF26 Registration",
+        prefill: { name, email, contact: phone },
+        handler: function (response: any) {
+          // response has razorpay_payment_id, razorpay_order_id, razorpay_signature
+          window.location.href = `/thank-you?order_id=${orderData.our_order_id}&razorpay_payment_id=${response.razorpay_payment_id}&razorpay_order_id=${response.razorpay_order_id}&razorpay_signature=${response.razorpay_signature}`;
+        },
+        modal: {
+          ondismiss: function () {
+            setIsLoading(false);
+            setErrorMsg("Payment cancelled. Please try again.");
+          }
+        },
+        theme: { color: "#0D1B3E" }
       };
-
-      await cashfree.checkout(checkoutOptions);
+      
+      const rzp = new (window as any).Razorpay(options);
+      rzp.open();
     } catch (err: any) {
       setErrorMsg(err.message || "An error occurred during payment.");
       setIsLoading(false);
@@ -115,6 +133,7 @@ function RegisterForm() {
 
   return (
     <div className="bg-[var(--color-primary-container)] min-h-screen text-[var(--color-on-surface)] font-body md:flex md:flex-col md:items-center overflow-x-hidden">
+      <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="afterInteractive" />
 
       {/* Top Navigation */}
       <header className="w-full max-w-7xl relative flex justify-between items-center px-4 sm:px-6 py-4 border-b border-[var(--color-outline-variant)]/30 sticky top-0 bg-[var(--color-primary-container)]/90 backdrop-blur-md z-50 overflow-hidden">
