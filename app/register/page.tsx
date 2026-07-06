@@ -8,7 +8,7 @@ import { load } from "@cashfreepayments/cashfree-js";
 function RegisterForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const source = searchParams.get("source");
+  const source = searchParams.get("source") || "offline";
   const basePrice = 20;
 
   const [bogoEnabled, setBogoEnabled] = useState(false);

@@ -22,7 +22,7 @@ const spaceMono = Space_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Focus Wapas Lao | 19 July Mega Youth Fest Dhanbad",
+  title: "Dhanbad's Biggest Youth Festival | 19 July Mega Youth Fest",
   description: "19 July — ek din jo focus wapas la dega. 2500+ log is saal join kar rahe hain Dhanbad ke sabse bade youth fest mein.",
 };
 
