@@ -320,7 +320,7 @@ function RegisterForm() {
             </button>
             <div className="flex items-center justify-center gap-2 text-[var(--color-on-surface-variant)] font-label-caps text-[12px] uppercase mt-2">
               <span className="material-symbols-outlined text-[16px]">lock</span>
-              Secure payment via Cashfree
+              Secure payment via Razorpay
             </div>
           </div>
         </div>
