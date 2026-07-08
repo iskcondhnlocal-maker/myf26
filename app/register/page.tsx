@@ -153,8 +153,8 @@ function RegisterForm() {
 
         {/* Header Section */}
         <div className="lg:col-span-12 flex flex-col gap-4">
-          <div className="inline-flex items-center gap-2 bg-[var(--color-on-tertiary-container)] text-[var(--color-surface-container-lowest)] font-label-caps px-4 py-2 self-start uppercase">
-            <span className="material-symbols-outlined text-[16px]">location_on</span>
+          <div className="inline-flex items-center gap-1 sm:gap-2 bg-[var(--color-on-tertiary-container)] text-[var(--color-surface-container-lowest)] font-label-caps px-2 sm:px-4 py-1.5 sm:py-2 self-start uppercase text-[9px] sm:text-xs whitespace-nowrap">
+            <span className="material-symbols-outlined text-[10px] sm:text-[16px]">location_on</span>
             19 July · 10 AM · Golf Ground, Dhanbad
           </div>
           <h1 className="text-5xl md:text-7xl font-black text-[var(--color-on-surface)] uppercase drop-shadow-[4px_4px_0_var(--color-secondary)] font-display tracking-tight">

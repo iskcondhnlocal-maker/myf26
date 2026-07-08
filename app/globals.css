@@ -97,6 +97,21 @@
   --color-tertiary-fixed-dim: var(--tertiary-fixed-dim);
   --color-on-tertiary-fixed: var(--on-tertiary-fixed);
   --color-on-tertiary-fixed-variant: var(--on-tertiary-fixed-variant);
+
+  --animate-button-pulse: button-pulse 2s infinite cubic-bezier(0.66, 0, 0, 1);
+  --animate-button-shine: button-shine 3s infinite ease-in-out;
+
+  @keyframes button-pulse {
+    0% { box-shadow: 0 0 0 0 rgba(68, 218, 218, 0.6); }
+    70% { box-shadow: 0 0 0 12px rgba(68, 218, 218, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(68, 218, 218, 0); }
+  }
+
+  @keyframes button-shine {
+    0% { transform: skewX(-20deg) translateX(-150%); }
+    20% { transform: skewX(-20deg) translateX(250%); }
+    100% { transform: skewX(-20deg) translateX(250%); }
+  }
 }
 
 body {
@@ -125,4 +140,29 @@ body {
 .hard-shadow-cyan-hover:hover {
   box-shadow: 8px 8px 0 0 var(--secondary);
   transform: translate(-4px, -4px);
+}
+
+@utility btn-shine-pulse {
+  position: relative;
+  overflow: hidden;
+  animation: var(--animate-button-pulse);
+  transition: transform 0.2s, filter 0.2s;
+  will-change: transform, box-shadow, filter;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.6) 50%, rgba(255, 255, 255, 0) 100%);
+    animation: var(--animate-button-shine);
+    pointer-events: none;
+  }
+  
+  &:hover {
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+  }
 }
