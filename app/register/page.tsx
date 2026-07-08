@@ -15,6 +15,7 @@ function RegisterForm() {
   const [bogoEnabled, setBogoEnabled] = useState(false);
   const [donationEnabled, setDonationEnabled] = useState(false);
   const [donationAmount, setDonationAmount] = useState(0);
+  const [boysConfirmed, setBoysConfirmed] = useState(false);
 
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -30,7 +31,7 @@ function RegisterForm() {
   const phoneRegex = /^[6-9]\d{9}$/;
   const isPhoneValid = phone === "" || phoneRegex.test(phone);
   const isGuestPhoneValid = !bogoEnabled || guestPhone === "" || phoneRegex.test(guestPhone);
-  const isFormValid = name && email && phoneRegex.test(phone) && (!bogoEnabled || (guestName && guestEmail && phoneRegex.test(guestPhone)));
+  const isFormValid = name && email && phoneRegex.test(phone) && (!bogoEnabled || (guestName && guestEmail && phoneRegex.test(guestPhone))) && boysConfirmed;
 
   const total = basePrice + (donationEnabled ? donationAmount : 0);
 
@@ -53,6 +54,7 @@ function RegisterForm() {
         setGuestName(savedState.guestName);
         setGuestPhone(savedState.guestPhone);
         setGuestEmail(savedState.guestEmail);
+        setBoysConfirmed(savedState.boysConfirmed || false);
       } catch (e) {
         console.error("Failed to restore state", e);
       }
@@ -70,7 +72,7 @@ function RegisterForm() {
 
     // Save state before redirecting
     sessionStorage.setItem("myf_register_state", JSON.stringify({
-      bogoEnabled, donationEnabled, donationAmount, name, phone, email, guestName, guestPhone, guestEmail, source
+      bogoEnabled, donationEnabled, donationAmount, name, phone, email, guestName, guestPhone, guestEmail, source, boysConfirmed
     }));
 
     try {
@@ -169,9 +171,12 @@ function RegisterForm() {
 
           {/* Primary Form Fields */}
           <div className="bg-[#000000] p-6 border border-[var(--color-secondary)] hard-shadow-cyan">
-            <div className="flex justify-between items-center mb-6 border-b border-[var(--color-outline-variant)]/30 pb-2">
+            <div className="flex justify-between items-center mb-4 border-b border-[var(--color-outline-variant)]/30 pb-2">
               <h3 className="font-label-caps text-[var(--color-secondary)] uppercase">Your Details</h3>
               <span className="text-xl font-bold text-[var(--color-secondary)] font-display">₹20</span>
+            </div>
+            <div className="bg-[var(--color-secondary)]/10 border border-[var(--color-secondary)]/30 p-3 mb-6">
+              <p className="text-[var(--color-secondary)] text-sm font-medium">Yeh registration sirf ladkon (boys) ke liye hai. Ladkiyon ke liye alag program jald hi aayega.</p>
             </div>
             <div className="flex flex-col gap-6">
               <div className="flex flex-col gap-1">
@@ -297,6 +302,22 @@ function RegisterForm() {
               <span className="font-label-caps text-[var(--color-on-surface-variant)] uppercase">Total Payable</span>
               <span className="text-3xl font-black text-[var(--color-secondary)] font-display">₹{total}</span>
             </div>
+
+            <label className="flex items-start gap-3 cursor-pointer group mt-2">
+              <div className="relative flex items-center justify-center shrink-0 mt-0.5">
+                <input 
+                  type="checkbox" 
+                  className="peer appearance-none w-5 h-5 border-2 border-[var(--color-outline-variant)] rounded-sm bg-transparent checked:bg-[var(--color-secondary)] checked:border-[var(--color-secondary)] cursor-pointer transition-colors"
+                  checked={boysConfirmed}
+                  onChange={(e) => setBoysConfirmed(e.target.checked)}
+                  required
+                />
+                <span className="material-symbols-outlined absolute text-[#000000] text-[16px] opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity" style={{ fontVariationSettings: "'FILL' 1" }}>check</span>
+              </div>
+              <span className="text-[13px] text-[var(--color-on-surface-variant)] group-hover:text-[var(--color-on-surface)] transition-colors leading-tight">
+                Main confirm karta hoon ki main aur mera guest (agar hai) dono boys hain.
+              </span>
+            </label>
 
             <button
               type="submit"
