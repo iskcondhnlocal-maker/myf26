@@ -31,7 +31,7 @@ export default function HeroSection({
           >
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--color-secondary)]/10 border border-[var(--color-secondary)]/30 text-[var(--color-secondary)] mb-4">
               <span className="material-symbols-outlined text-sm">calendar_today</span>
-              <span className="label-caps text-xs">19 July · Golf Ground, Dhanbad</span>
+              <span className="label-caps text-xs">19 July · 10 AM · Golf Ground, Dhanbad</span>
             </div>
             <div className="flex flex-col gap-4 text-center max-w-4xl">
               <h1 className="text-white text-5xl font-black leading-tight tracking-[-0.033em] @[480px]:text-7xl font-display">

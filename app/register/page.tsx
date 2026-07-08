@@ -155,7 +155,7 @@ function RegisterForm() {
         <div className="lg:col-span-12 flex flex-col gap-4">
           <div className="inline-flex items-center gap-2 bg-[var(--color-on-tertiary-container)] text-[var(--color-surface-container-lowest)] font-label-caps px-4 py-2 self-start uppercase">
             <span className="material-symbols-outlined text-[16px]">location_on</span>
-            19 July · Golf Ground, Dhanbad
+            19 July · 10 AM · Golf Ground, Dhanbad
           </div>
           <h1 className="text-5xl md:text-7xl font-black text-[var(--color-on-surface)] uppercase drop-shadow-[4px_4px_0_var(--color-secondary)] font-display tracking-tight">
             Apna Seat Confirm Kariye

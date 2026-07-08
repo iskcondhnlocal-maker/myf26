@@ -22,9 +22,9 @@ export default function TestimonialCarousel() {
       image: "/3. Uttam – 2nd Year, KK Polytechnic, Dhanbad.jpeg",
     },
     {
-      name: "Roshan – 3rd Year MBBS, PMCH Dhanbad",
+      name: "Mritunjay – 3rd Year MBBS, PMCH Dhanbad",
       quote: "Medical studies ke pressure ke beech yeh event ek refreshing experience tha. Sessions ne stress ko handle karna sikhaya aur mentors se baat karke kaafi grounded feel hua. Din kaafi meaningful raha.",
-      image: "/4. Roshan – 3rd Year MBBS, PMCH Dhanbad.png",
+      image: "/4. Mritunjay – 3rd Year MBBS, PMCH Dhanbad.png",
     },
     {
       name: "Rajesh – IIT-JEE Aspirant",
@@ -110,7 +110,7 @@ export default function TestimonialCarousel() {
         {duplicatedTestimonials.map((testimonial, idx) => (
           <div key={idx} className="flex h-auto w-80 sm:w-96 flex-col gap-4 rounded-2xl bg-[var(--color-surface-container-low)] p-4 border border-[var(--color-outline-variant)]/20 shadow-lg shrink-0">
             <div
-              className="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-xl"
+              className="w-full bg-top bg-no-repeat aspect-square bg-cover rounded-xl"
               data-alt={`Portrait of ${testimonial.name}`}
               style={{
                 backgroundImage: `url('${testimonial.image}')`,
