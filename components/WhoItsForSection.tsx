@@ -11,7 +11,7 @@ export default function WhoItsForSection() {
               <span className="material-symbols-outlined text-green-400 mt-1" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
               <div>
                 <h3 className="text-xl font-bold text-white mb-1 font-display">Aap Ek Ladka Hain, Umar 18-30 Saal</h3>
-                <p className="text-[var(--color-on-surface-variant)]">Yeh event specially boys ke liye design kiya gaya hai. Ladkiyon ke liye bahut jald ek alag, special program announce hoga &mdash; stay tuned!</p>
+                <p className="text-[var(--color-on-surface-variant)]">Yeh edition specially boys ke liye curated hai. Ladkiyon ke liye bahut jald ek alag, special edition announce hoga &mdash; stay tuned!</p>
               </div>
             </div>
             <div className="flex items-start gap-4 p-6 rounded-2xl bg-green-500/5 border border-green-500/20">

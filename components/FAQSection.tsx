@@ -21,7 +21,7 @@ export default function FAQSection() {
               <span className="material-symbols-outlined group-open:rotate-180 transition-transform">expand_more</span>
             </summary>
             <div className="p-6 pt-0 text-[var(--color-on-surface-variant)] leading-relaxed">
-              Bilkul nahi — sirf ₹20, aur bas itna hi. Koi chhupa hua charge nahi hai. Humara maqsad simple hai: Dhanbad ka har youth is experience ka hissa ban sake, chahe unki jeb mein jitna bhi ho. Isliye humne price itna kam rakha hai — taaki paisa kabhi kisi ke aane mein rukawat na bane.
+              Bilkul nahi — sirf ₹20, aur bas itna hi. Koi chhupa hua charge nahi hai. Humara maqsad simple hai: Dhanbad ka har ladka is experience ka hissa ban sake, chahe unki jeb mein jitna bhi ho. Isliye humne price itna kam rakha hai — taaki paisa kabhi kisi ke aane mein rukawat na bane.
             </div>
           </details>
           <details className="group border border-[var(--color-outline-variant)]/30 rounded-xl bg-[var(--color-surface-container-low)] overflow-hidden">

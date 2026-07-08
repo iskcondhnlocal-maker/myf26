@@ -15,7 +15,6 @@ function RegisterForm() {
   const [bogoEnabled, setBogoEnabled] = useState(false);
   const [donationEnabled, setDonationEnabled] = useState(false);
   const [donationAmount, setDonationAmount] = useState(0);
-  const [boysConfirmed, setBoysConfirmed] = useState(false);
 
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -31,7 +30,7 @@ function RegisterForm() {
   const phoneRegex = /^[6-9]\d{9}$/;
   const isPhoneValid = phone === "" || phoneRegex.test(phone);
   const isGuestPhoneValid = !bogoEnabled || guestPhone === "" || phoneRegex.test(guestPhone);
-  const isFormValid = name && email && phoneRegex.test(phone) && (!bogoEnabled || (guestName && guestEmail && phoneRegex.test(guestPhone))) && boysConfirmed;
+  const isFormValid = name && email && phoneRegex.test(phone) && (!bogoEnabled || (guestName && guestEmail && phoneRegex.test(guestPhone)));
 
   const total = basePrice + (donationEnabled ? donationAmount : 0);
 
@@ -54,7 +53,6 @@ function RegisterForm() {
         setGuestName(savedState.guestName);
         setGuestPhone(savedState.guestPhone);
         setGuestEmail(savedState.guestEmail);
-        setBoysConfirmed(savedState.boysConfirmed || false);
       } catch (e) {
         console.error("Failed to restore state", e);
       }
@@ -72,7 +70,7 @@ function RegisterForm() {
 
     // Save state before redirecting
     sessionStorage.setItem("myf_register_state", JSON.stringify({
-      bogoEnabled, donationEnabled, donationAmount, name, phone, email, guestName, guestPhone, guestEmail, source, boysConfirmed
+      bogoEnabled, donationEnabled, donationAmount, name, phone, email, guestName, guestPhone, guestEmail, source
     }));
 
     try {
@@ -302,22 +300,6 @@ function RegisterForm() {
               <span className="font-label-caps text-[var(--color-on-surface-variant)] uppercase">Total Payable</span>
               <span className="text-3xl font-black text-[var(--color-secondary)] font-display">₹{total}</span>
             </div>
-
-            <label className="flex items-start gap-3 cursor-pointer group mt-2">
-              <div className="relative flex items-center justify-center shrink-0 mt-0.5">
-                <input 
-                  type="checkbox" 
-                  className="peer appearance-none w-5 h-5 border-2 border-[var(--color-outline-variant)] rounded-sm bg-transparent checked:bg-[var(--color-secondary)] checked:border-[var(--color-secondary)] cursor-pointer transition-colors"
-                  checked={boysConfirmed}
-                  onChange={(e) => setBoysConfirmed(e.target.checked)}
-                  required
-                />
-                <span className="material-symbols-outlined absolute text-[#000000] text-[16px] opacity-0 peer-checked:opacity-100 pointer-events-none transition-opacity" style={{ fontVariationSettings: "'FILL' 1" }}>check</span>
-              </div>
-              <span className="text-[13px] text-[var(--color-on-surface-variant)] group-hover:text-[var(--color-on-surface)] transition-colors leading-tight">
-                Main confirm karta hoon ki main aur mera guest (agar hai) dono boys hain.
-              </span>
-            </label>
 
             <button
               type="submit"
