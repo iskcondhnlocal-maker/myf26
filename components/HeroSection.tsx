@@ -3,7 +3,8 @@ import React from "react";
 
 interface HeroSectionProps {
   headline?: React.ReactNode;
-  subheadline?: string;
+  subheadline?: string | React.ReactNode;
+  extraContent?: React.ReactNode;
   source?: string;
 }
 
@@ -15,6 +16,7 @@ export default function HeroSection({
     </>
   ),
   subheadline = "19 July — ek din jo focus wapas la dega.",
+  extraContent,
   source = "angle1",
 }: HeroSectionProps) {
   return (
@@ -29,7 +31,7 @@ export default function HeroSection({
                 "linear-gradient(rgba(13, 27, 62, 0.8) 0%, rgba(19, 23, 32, 0.95) 100%), url('https://lh3.googleusercontent.com/aida-public/AB6AXuAW9HlGQGzjZNjz6qZgwjOtdxCSq3wwNZ2c5Cb4iVejQn7iMKe1YKkF0pOfkRM0TQj44T0NP_jP64_s-s1Yu_c8_eVr_D6J19DUjbTNDBAJ8rYmTWTygcgB7_DssVALI6jtFye0CR6Vief7NziVZV9xN38EJwVX58x4pla2uPlbQtbzYqILLykbnBboUtxWSm3h5r0jURFYX_3By4EL2sW811i7sYrVDKkU3Z6RirE4i8fI1N0UWYcD')",
             }}
           >
-            <div className="inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 rounded-full bg-[var(--color-secondary)]/10 border border-[var(--color-secondary)]/30 text-[var(--color-secondary)] mb-4">
+            <div className="inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 rounded-full bg-[var(--color-secondary)]/10 border border-[var(--color-secondary)]/30 text-[var(--color-secondary)] mb-[clamp(1.5rem,5vw,2.5rem)]">
               <span className="material-symbols-outlined text-[10px] sm:text-sm">calendar_today</span>
               <span className="label-caps text-[9px] sm:text-xs whitespace-nowrap">19 July · 10 AM · Golf Ground, Dhanbad</span>
             </div>
@@ -40,6 +42,7 @@ export default function HeroSection({
               <h2 className="text-[#98a4c3] text-lg font-normal leading-relaxed @[480px]:text-2xl max-w-2xl mx-auto font-body">
                 {subheadline}
               </h2>
+              {extraContent}
             </div>
             <div className="flex flex-col items-center gap-4 mt-4">
               <Link data-gtm-cta="register-intent" href={`/register?source=${source}`} className="btn-shine-pulse relative overflow-hidden flex min-w-[120px] cursor-pointer items-center justify-center rounded-none h-14 px-8 bg-[var(--color-secondary)] text-[var(--color-on-secondary-container)] text-lg font-bold transition-transform active:scale-95">

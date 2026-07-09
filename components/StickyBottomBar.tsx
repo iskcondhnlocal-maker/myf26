@@ -1,43 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useCountdownTimer } from "@/hooks/useCountdownTimer";
 
 export default function StickyBottomBar({ source = "paid-angle1" }: { source?: string }) {
-  const [timeLeft, setTimeLeft] = useState<number | null>(null);
-
-  useEffect(() => {
-    const DURATION = 15 * 60 * 1000; // 15 minutes in ms
-    const STORAGE_KEY = "myf26_timer_start";
-
-    const updateTimer = () => {
-      const storedStart = localStorage.getItem(STORAGE_KEY);
-      const now = Date.now();
-      
-      let startTime = storedStart ? parseInt(storedStart, 10) : null;
-      
-      if (!startTime || isNaN(startTime) || now - startTime >= DURATION) {
-        startTime = now;
-        localStorage.setItem(STORAGE_KEY, startTime.toString());
-      }
-      
-      const elapsed = now - startTime;
-      const remaining = Math.max(0, DURATION - elapsed);
-      setTimeLeft(remaining);
-    };
-
-    updateTimer();
-    const intervalId = setInterval(updateTimer, 1000);
-
-    return () => clearInterval(intervalId);
-  }, []);
-
-  const formatTime = (ms: number) => {
-    const totalSeconds = Math.floor(ms / 1000);
-    const minutes = Math.floor(totalSeconds / 60);
-    const seconds = totalSeconds % 60;
-    return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
-  };
+  const { timeLeft, formatTime } = useCountdownTimer();
 
   return (
     <div className="fixed bottom-0 inset-x-0 z-50 font-body flex justify-center md:pb-6 pointer-events-none">

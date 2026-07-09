@@ -2,6 +2,7 @@
 import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useCountdownTimer } from "@/hooks/useCountdownTimer";
 // @ts-expect-error - Cashfree JS SDK does not provide TypeScript declarations
 import { load } from "@cashfreepayments/cashfree-js";
 import Script from "next/script";
@@ -11,6 +12,7 @@ function RegisterForm() {
   const searchParams = useSearchParams();
   const source = searchParams.get("source") || "offline";
   const basePrice = 20;
+  const { timeLeft, formatTime } = useCountdownTimer();
 
   const [bogoEnabled, setBogoEnabled] = useState(false);
   const [donationEnabled, setDonationEnabled] = useState(false);
@@ -153,7 +155,7 @@ function RegisterForm() {
 
         {/* Header Section */}
         <div className="lg:col-span-12 flex flex-col gap-4">
-          <div className="inline-flex items-center gap-1 sm:gap-2 bg-[var(--color-on-tertiary-container)] text-[var(--color-surface-container-lowest)] font-label-caps px-2 sm:px-4 py-1.5 sm:py-2 self-start uppercase text-[9px] sm:text-xs whitespace-nowrap">
+          <div className="inline-flex items-center gap-1 sm:gap-2 bg-[var(--color-on-tertiary-container)] text-[var(--color-surface-container-lowest)] font-label-caps px-2 sm:px-4 py-1.5 sm:py-2 self-start uppercase text-[9px] sm:text-xs whitespace-nowrap mb-[clamp(0.5rem,3vw,1.5rem)]">
             <span className="material-symbols-outlined text-[10px] sm:text-[16px]">location_on</span>
             19 July · 10 AM · Golf Ground, Dhanbad
           </div>
@@ -174,7 +176,7 @@ function RegisterForm() {
               <span className="text-xl font-bold text-[var(--color-secondary)] font-display">₹20</span>
             </div>
             <div className="bg-[var(--color-secondary)]/10 border border-[var(--color-secondary)]/30 p-3 mb-6">
-              <p className="text-[var(--color-secondary)] text-sm font-medium">Yeh registration sirf ladkon (boys) ke liye hai. Ladkiyon ke liye alag program jald hi aayega.</p>
+              <p className="text-[var(--color-secondary)] text-sm font-medium">Yeh registration sirf 18-30 saal ke ladkon (boys) ke liye hai. Ladkiyon ke liye alag program jald hi aayega.</p>
             </div>
             <div className="flex flex-col gap-6">
               <div className="flex flex-col gap-1">
@@ -299,6 +301,16 @@ function RegisterForm() {
             <div className="flex justify-between items-center border-b border-[var(--color-outline-variant)]/30 pb-4">
               <span className="font-label-caps text-[var(--color-on-surface-variant)] uppercase">Total Payable</span>
               <span className="text-3xl font-black text-[var(--color-secondary)] font-display">₹{total}</span>
+            </div>
+
+            <div className="flex flex-col gap-1 items-center justify-center text-center">
+              <p className="text-sm font-medium text-[var(--color-on-surface-variant)]">
+                1100+ log already register kar chuke hain — seats limited hain.
+              </p>
+              <p className="text-[12px] font-bold label-caps text-[#ff7a59]">
+                {timeLeft !== null && timeLeft <= 0 ? "Offer ending soon" : 
+                 timeLeft !== null ? `Offer ends in ${formatTime(timeLeft)} mins` : "Ends Soon"}
+              </p>
             </div>
 
             <button
