@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, Suspense } from "react";
+import { useEffect, useState, Suspense, useRef } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 
@@ -13,6 +13,7 @@ function ThankYouContent() {
   const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
   const [errorMessage, setErrorMessage] = useState("");
   const [tickets, setTickets] = useState<{ticket_id: string, role: string, qr_url: string | null}[]>([]);
+  const hasFired = useRef(false);
 
   useEffect(() => {
     if (!orderId) {
@@ -20,6 +21,9 @@ function ThankYouContent() {
        setErrorMessage("No order ID found.");
        return;
     }
+
+    if (hasFired.current) return;
+    hasFired.current = true;
 
     const verifyPayment = async () => {
       try {

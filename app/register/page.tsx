@@ -113,8 +113,14 @@ function RegisterForm() {
         description: "MYF26 Registration",
         prefill: { name, email, contact: phone },
         handler: function (response: any) {
-          // response has razorpay_payment_id, razorpay_order_id, razorpay_signature
-          window.location.href = `/thank-you?order_id=${orderData.our_order_id}&razorpay_payment_id=${response.razorpay_payment_id}&razorpay_order_id=${response.razorpay_order_id}&razorpay_signature=${response.razorpay_signature}`;
+          let fbclidParam = "";
+          try {
+            const savedFbclid = localStorage.getItem("myf_fbclid");
+            if (savedFbclid) {
+              fbclidParam = `&fbclid=${encodeURIComponent(savedFbclid)}`;
+            }
+          } catch (e) {}
+          window.location.href = `/thank-you?order_id=${orderData.our_order_id}&razorpay_payment_id=${response.razorpay_payment_id}&razorpay_order_id=${response.razorpay_order_id}&razorpay_signature=${response.razorpay_signature}${fbclidParam}`;
         },
         modal: {
           ondismiss: function () {
@@ -173,7 +179,7 @@ function RegisterForm() {
           <div className="bg-[#000000] p-6 border border-[var(--color-secondary)] hard-shadow-cyan">
             <div className="flex justify-between items-center mb-4 border-b border-[var(--color-outline-variant)]/30 pb-2">
               <h3 className="font-label-caps text-[var(--color-secondary)] uppercase">Your Details</h3>
-              <span className="text-xl font-bold text-[var(--color-secondary)] font-display">₹20</span>
+              <span className="text-xl font-bold text-[var(--color-secondary)] font-display">₹{basePrice}</span>
             </div>
             <div className="bg-[var(--color-secondary)]/10 border border-[var(--color-secondary)]/30 p-3 mb-6">
               <p className="text-[var(--color-secondary)] text-sm font-medium">Yeh registration sirf 18-30 saal ke ladkon (boys) ke liye hai. Ladkiyon ke liye alag program jald hi aayega.</p>

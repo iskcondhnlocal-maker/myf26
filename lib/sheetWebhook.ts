@@ -27,9 +27,9 @@ export async function processWebhookAndTickets(params: {
   async function checkTicketExists(tId: string) {
      if (!sheetWebhookUrl || !sheetWebhookUrl.startsWith('http')) return null;
      try {
-       const res = await fetch(`${sheetWebhookUrl}?ticket_id=${tId}`);
+       const res = await fetch(`${sheetWebhookUrl}?ticket_id=${tId}`, { cache: 'no-store' });
        const data = await res.json();
-       if (data && data.found) return data;
+       if (data && data.success && data.ticket) return data.ticket;
      } catch (err) {
        // ignore
      }

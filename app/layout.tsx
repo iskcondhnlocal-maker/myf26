@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Anybody, Hanken_Grotesk, Space_Mono } from "next/font/google";
 import Script from "next/script";
+import React from "react";
+import FbclidCapturer from "@/components/FbclidCapturer";
 import "./globals.css";
 
 const anybody = Anybody({
@@ -61,6 +63,9 @@ export default function RootLayout({
             height="0" width="0" style={{display: "none", visibility: "hidden"}}
           />
         </noscript>
+        <React.Suspense fallback={null}>
+          <FbclidCapturer />
+        </React.Suspense>
         {children}
       </body>
     </html>
