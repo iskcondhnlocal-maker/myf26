@@ -15,7 +15,7 @@ export default function StickyBottomBar({ source = "paid-angle1" }: { source?: s
               <span className="text-[11px] sm:text-xs text-[var(--color-on-surface-variant)] line-through font-normal mr-1.5">₹499</span>
               <span className="text-[var(--color-secondary)]">₹20</span>
             </p>
-            <p className="text-[11px] sm:text-xs label-caps text-[#ff7a59] mt-0.5">
+            <p className="text-[11px] sm:text-xs label-caps text-[#ef4444] mt-0.5">
               {timeLeft !== null && timeLeft <= 0 ? "Offer ending soon" : 
                timeLeft !== null ? `Offer ends in ${formatTime(timeLeft)} mins` : "Ends Soon"}
             </p>

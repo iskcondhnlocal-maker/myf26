@@ -19,6 +19,30 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: false, error: 'Missing payment details' }, { status: 400 });
     }
 
+    // --- DEV ONLY: Skip Razorpay verification for local testing ---
+    if (process.env.NODE_ENV === 'development' && razorpay_payment_id === 'dev_test_payment') {
+      console.log("DEV MODE: Skipping Razorpay signature and fetch validation");
+      // Hardcode total amount to 20 for test
+      const orderAmount = 20; 
+      const donationAmount = 0;
+      
+      const ticketsCreated = await processWebhookAndTickets({
+        orderId,
+        name,
+        phone,
+        email,
+        source,
+        bogo,
+        guest_name,
+        guest_phone,
+        guest_email,
+        orderAmount,
+        donationAmount
+      });
+      return NextResponse.json({ success: true, tickets: ticketsCreated, amount: orderAmount });
+    }
+    // --- END DEV ONLY ---
+
     // Verify signature
     const expectedSignature = crypto.createHmac("sha256", process.env.RAZORPAY_KEY_SECRET || "")
                                     .update(razorpay_order_id + "|" + razorpay_payment_id)

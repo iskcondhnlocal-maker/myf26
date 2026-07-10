@@ -16,6 +16,7 @@ function RegisterForm() {
 
   const [bogoEnabled, setBogoEnabled] = useState(false);
   const [donationEnabled, setDonationEnabled] = useState(false);
+  const [isDonationExpanded, setIsDonationExpanded] = useState(false);
   const [donationAmount, setDonationAmount] = useState(0);
 
   const [name, setName] = useState("");
@@ -139,6 +140,56 @@ function RegisterForm() {
     }
   };
 
+  const handleSkipPayment = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (isLoading) return;
+    setIsLoading(true);
+    setErrorMsg("");
+
+    sessionStorage.setItem("myf_register_state", JSON.stringify({
+      bogoEnabled, donationEnabled, donationAmount, name, phone, email, guestName, guestPhone, guestEmail, source
+    }));
+
+    try {
+      const payload = {
+        amount: total,
+        name,
+        phone,
+        email,
+        source,
+        bogo: bogoEnabled,
+        guest_name: guestName,
+        guest_phone: guestPhone,
+        guest_email: guestEmail
+      };
+
+      const createOrderRes = await fetch('/api/razorpay/create-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      const orderData = await createOrderRes.json();
+
+      if (!orderData.razorpay_order_id) {
+        throw new Error(orderData.error || "Failed to create order for skip");
+      }
+
+      let fbclidParam = "";
+      try {
+        const savedFbclid = localStorage.getItem("myf_fbclid");
+        if (savedFbclid) {
+          fbclidParam = `&fbclid=${encodeURIComponent(savedFbclid)}`;
+        }
+      } catch (e) {}
+
+      window.location.href = `/thank-you?order_id=${orderData.our_order_id}&razorpay_payment_id=dev_test_payment&razorpay_order_id=${orderData.razorpay_order_id}&razorpay_signature=dev_signature${fbclidParam}`;
+    } catch (err: any) {
+      setErrorMsg(err.message || "An error occurred during payment skip.");
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="bg-[var(--color-primary-container)] min-h-screen text-[var(--color-on-surface)] font-body md:flex md:flex-col md:items-center overflow-x-hidden">
       <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="afterInteractive" />
@@ -161,7 +212,7 @@ function RegisterForm() {
 
         {/* Header Section */}
         <div className="lg:col-span-12 flex flex-col gap-4">
-          <div className="inline-flex items-center gap-1 sm:gap-2 bg-[var(--color-on-tertiary-container)] text-[var(--color-surface-container-lowest)] font-label-caps px-2 sm:px-4 py-1.5 sm:py-2 self-start uppercase text-[9px] sm:text-xs whitespace-nowrap mb-[clamp(0.5rem,3vw,1.5rem)]">
+          <div className="inline-flex items-center gap-1 sm:gap-2 bg-[#ef4444] text-white font-label-caps px-2 sm:px-4 py-1.5 sm:py-2 self-start uppercase text-[9px] sm:text-xs whitespace-nowrap mb-[clamp(0.5rem,3vw,1.5rem)]">
             <span className="material-symbols-outlined text-[10px] sm:text-[16px]">location_on</span>
             19 July · 10 AM · Golf Ground, Dhanbad
           </div>
@@ -201,96 +252,102 @@ function RegisterForm() {
                 <input required value={email} onChange={e => setEmail(e.target.value)} className="bg-[#000000] border-0 border-b-2 border-[var(--color-secondary)] focus:ring-0 focus:border-[var(--color-secondary)] text-[var(--color-on-surface)] font-body py-2 px-0 w-full placeholder:text-[var(--color-on-surface-variant)]/50" placeholder="you@example.com" type="email" />
                 <span className="text-[12px] text-gray-500 mt-1">Sahi number aur email dein — aapka pass isi par bhega jayega</span>
               </div>
+
+              {/* BOGO Integration */}
+              <div className="mt-4 pt-6 border-t border-[var(--color-outline-variant)]/30 flex flex-col gap-4">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-2">
+                  <div className="flex flex-col gap-1 w-full sm:w-auto flex-1">
+                    <div className="flex items-center gap-2">
+                      <span className="material-symbols-outlined text-[#25D366] shrink-0 text-[18px] sm:text-[24px]" style={{ fontVariationSettings: "'FILL' 1" }}>group</span>
+                      <span className="font-label-caps uppercase text-[#25D366] text-[13px] sm:text-[16px] leading-tight font-bold whitespace-nowrap">Ek dost ko free mein laao</span>
+                      <span className="bg-[#ef4444]/10 text-[#ef4444] border border-[#ef4444]/50 px-1.5 py-0.5 text-[10px] sm:text-[12px] font-bold tracking-widest uppercase inline-block whitespace-nowrap shrink-0 ml-1">SAVE 50%</span>
+                    </div>
+                    <span className="font-label-caps text-[10px] sm:text-[11px] text-[#25D366]/80 uppercase tracking-widest font-bold ml-6 sm:ml-8 leading-tight whitespace-nowrap">
+                      ONE TIME OFFER — BUY 1 GET 1
+                    </span>
+                  </div>
+                  <label className="relative inline-flex items-center cursor-pointer shrink-0 self-end sm:self-auto mt-2 sm:mt-0 mr-1 sm:mr-0">
+                    <input type="checkbox" className="sr-only peer" checked={bogoEnabled} onChange={(e) => setBogoEnabled(e.target.checked)} />
+                    <div className="w-11 h-6 bg-[var(--color-surface-container-high)] peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-[#25D366] rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#25D366]"></div>
+                  </label>
+                </div>
+
+                {bogoEnabled && (
+                  <div className="flex flex-col gap-4 mt-2 p-4 border border-dashed border-[#25D366]/50 bg-[#25D366]/10 rounded-sm">
+                    <div className="flex flex-col gap-1">
+                      <label className="font-label-caps text-[#25D366] uppercase">Guest Name</label>
+                      <input required value={guestName} onChange={e => setGuestName(e.target.value)} className="bg-[#000000] border-0 border-b-2 border-[#25D366] focus:ring-0 focus:border-[#25D366] text-[var(--color-on-surface)] font-body py-2 px-0 w-full placeholder:text-[var(--color-on-surface-variant)]/50" placeholder="Enter guest name" type="text" />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <label className="font-label-caps text-[#25D366] uppercase">Guest Phone Number</label>
+                      <input required value={guestPhone} onChange={e => setGuestPhone(e.target.value)} className="bg-[#000000] border-0 border-b-2 border-[#25D366] focus:ring-0 focus:border-[#25D366] text-[var(--color-on-surface)] font-body py-2 px-0 w-full placeholder:text-[var(--color-on-surface-variant)]/50" placeholder="10-digit mobile number" type="tel" maxLength={10} />
+                      {!isGuestPhoneValid && <span className="text-red-500 text-sm mt-1">Enter a valid 10-digit mobile number</span>}
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <label className="font-label-caps text-[#25D366] uppercase">Guest Email Address</label>
+                      <input required value={guestEmail} onChange={e => setGuestEmail(e.target.value)} className="bg-[#000000] border-0 border-b-2 border-[#25D366] focus:ring-0 focus:border-[#25D366] text-[var(--color-on-surface)] font-body py-2 px-0 w-full placeholder:text-[var(--color-on-surface-variant)]/50" placeholder="guest@example.com" type="email" />
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
-          {/* Order Summary Card */}
-          <div className="bg-[#000000] border border-[var(--color-secondary)] p-6 relative overflow-hidden group hover:border-[4px] transition-all duration-150 hard-shadow-cyan">
-            <div className="absolute left-0 top-0 bottom-0 w-6 ticket-edge bg-[var(--color-primary-container)] border-r border-[var(--color-secondary)] group-hover:border-r-[4px]"></div>
-            <div className="pl-8 flex flex-col gap-4 relative z-10">
-              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start border-b border-[var(--color-outline-variant)]/30 pb-4 gap-3">
-                <div>
-                  <h2 className="text-xl sm:text-2xl font-bold text-[var(--color-on-surface)] group-hover:text-[var(--color-secondary)] transition-colors uppercase font-display leading-tight flex items-center flex-wrap gap-2">
-                    One time offer
-                    <span className="bg-[#00ffd1]/20 text-[#00ffd1] border border-[#00ffd1]/50 px-2 py-0.5 text-xs sm:text-sm font-bold tracking-widest uppercase inline-block">FREE</span>
-                  </h2>
-                  <span className="font-label-caps text-sm sm:text-base text-[var(--color-on-surface-variant)] mt-1 block">General Admission — Buy 1, Get 1 Free</span>
+          {/* Rath Yatra Donation (Expandable) */}
+          <div className="w-full">
+            <button 
+              type="button" 
+              onClick={() => setIsDonationExpanded(!isDonationExpanded)}
+              className="flex items-center gap-2 text-[var(--color-secondary)] hover:text-[var(--color-secondary-fixed)] transition-colors w-full text-left py-2 px-1"
+            >
+              <span className="material-symbols-outlined shrink-0 text-[18px]">
+                {isDonationExpanded ? 'remove' : 'add'}
+              </span>
+              <span className="font-label-caps uppercase text-[clamp(11px,3.5vw,14px)] font-bold underline underline-offset-4 decoration-[var(--color-secondary)]/30 hover:decoration-[var(--color-secondary)]">
+                Ek Chhota Sa Yogdaan — Rath Yatra Ke Liye (Optional)
+              </span>
+            </button>
+            
+            <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isDonationExpanded ? 'max-h-[500px] opacity-100 mt-4' : 'max-h-0 opacity-0'}`}>
+              <div className={`bg-[#000000] border border-dashed border-[var(--color-secondary)] p-6 hard-shadow-cyan relative transition-opacity duration-300 ${!donationEnabled ? 'opacity-50' : 'opacity-100'}`}>
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <span className="material-symbols-outlined text-[var(--color-secondary)]">volunteer_activism</span>
+                    <h3 className="font-label-caps text-[var(--color-secondary)] uppercase">Rath Yatra Ke Liye Daan De Sakte Hain? (Optional)</h3>
+                  </div>
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" className="sr-only peer" checked={donationEnabled} onChange={(e) => setDonationEnabled(e.target.checked)} />
+                    <div className="w-11 h-6 bg-[var(--color-surface-container-high)] peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-[var(--color-secondary)] rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[var(--color-secondary)]"></div>
+                  </label>
                 </div>
-              </div>
+                <p className="text-[var(--color-on-surface-variant)] text-base mb-6">Aapka chhota sa yogdaan Dhanbad ke sabse bade Rath Yatra ko aur bhi grand banayega.</p>
 
-              {/* BOGO Toggle */}
-              <div className="pt-2 flex items-start sm:items-center justify-between gap-3">
-                <div className="flex items-center gap-2 sm:gap-3 flex-1">
-                  <span className="material-symbols-outlined text-[var(--color-secondary)] shrink-0" style={{ fontVariationSettings: "'FILL' 1" }}>group</span>
-                  <span className="font-label-caps uppercase text-[var(--color-secondary)] text-sm sm:text-base leading-tight">Ek dost ko free mein laao (BOGO)</span>
-                </div>
-                <label className="relative inline-flex items-center cursor-pointer shrink-0 mt-1 sm:mt-0">
-                  <input type="checkbox" className="sr-only peer" checked={bogoEnabled} onChange={(e) => setBogoEnabled(e.target.checked)} />
-                  <div className="w-11 h-6 bg-[var(--color-surface-container-high)] peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-[var(--color-secondary)] rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[var(--color-secondary)]"></div>
-                </label>
+                {donationEnabled && (
+                  <div className="flex flex-wrap gap-3">
+                    {[11, 51, 101, 251, 501].map(amount => (
+                      <button
+                        key={amount}
+                        type="button"
+                        onClick={() => setDonationAmount(amount)}
+                        className={`px-4 py-2 border border-[var(--color-secondary)]/30 font-label-caps transition-colors ${donationAmount === amount ? 'bg-[var(--color-secondary)] text-[#000000]' : 'text-[var(--color-secondary)] hover:bg-[var(--color-secondary)]/10'}`}
+                      >
+                        ₹{amount}
+                      </button>
+                    ))}
+                    <div className="relative flex-1 min-w-[120px]">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-secondary)]">₹</span>
+                      <input
+                        type="number"
+                        placeholder="Custom"
+                        value={donationAmount || ''}
+                        onChange={(e) => setDonationAmount(parseInt(e.target.value) || 0)}
+                        className="w-full bg-transparent border border-[var(--color-secondary)]/30 pl-7 pr-3 py-2 text-[var(--color-on-surface)] focus:border-[var(--color-secondary)] focus:ring-0 font-label-caps"
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
-
-              {/* BOGO Fields */}
-              {bogoEnabled && (
-                <div className="flex-col gap-4 mt-4 p-4 border border-dashed border-[var(--color-secondary)]/50 bg-[var(--color-surface)]/50 flex">
-                  <div className="flex flex-col gap-1">
-                    <label className="font-label-caps text-[var(--color-secondary)] uppercase">Guest Name</label>
-                    <input required value={guestName} onChange={e => setGuestName(e.target.value)} className="bg-[#000000] border-0 border-b-2 border-[var(--color-secondary)] focus:ring-0 focus:border-[var(--color-secondary)] text-[var(--color-on-surface)] font-body py-2 px-0 w-full placeholder:text-[var(--color-on-surface-variant)]/50" placeholder="Enter guest name" type="text" />
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <label className="font-label-caps text-[var(--color-secondary)] uppercase">Guest Phone Number</label>
-                    <input required value={guestPhone} onChange={e => setGuestPhone(e.target.value)} className="bg-[#000000] border-0 border-b-2 border-[var(--color-secondary)] focus:ring-0 focus:border-[var(--color-secondary)] text-[var(--color-on-surface)] font-body py-2 px-0 w-full placeholder:text-[var(--color-on-surface-variant)]/50" placeholder="10-digit mobile number" type="tel" maxLength={10} />
-                    {!isGuestPhoneValid && <span className="text-red-500 text-sm mt-1">Enter a valid 10-digit mobile number</span>}
-                    {isGuestPhoneValid && <span className="text-[12px] text-gray-500 mt-1">Sahi number aur email dein — aapka pass isi par bhega jayega</span>}
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <label className="font-label-caps text-[var(--color-secondary)] uppercase">Guest Email Address</label>
-                    <input required value={guestEmail} onChange={e => setGuestEmail(e.target.value)} className="bg-[#000000] border-0 border-b-2 border-[var(--color-secondary)] focus:ring-0 focus:border-[var(--color-secondary)] text-[var(--color-on-surface)] font-body py-2 px-0 w-full placeholder:text-[var(--color-on-surface-variant)]/50" placeholder="guest@example.com" type="email" />
-                    <span className="text-[12px] text-gray-500 mt-1">Sahi number aur email dein — aapka pass isi par bhega jayega</span>
-                  </div>
-                </div>
-              )}
             </div>
-          </div>
-
-          {/* Checkout Action Column */}
-          <div className="bg-[#000000] border border-dashed border-[var(--color-secondary)] p-6 hard-shadow-cyan relative overflow-hidden">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <span className="material-symbols-outlined text-[var(--color-secondary)]">volunteer_activism</span>
-                <h3 className="font-label-caps text-[var(--color-secondary)] uppercase">Support DHanbad's Biggest Rath Yatra (Optional)</h3>
-              </div>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input type="checkbox" className="sr-only peer" checked={donationEnabled} onChange={(e) => setDonationEnabled(e.target.checked)} />
-                <div className="w-11 h-6 bg-[var(--color-surface-container-high)] peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-[var(--color-secondary)] rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[var(--color-secondary)]"></div>
-              </label>
-            </div>
-            <p className="text-[var(--color-on-surface-variant)] text-base mb-6">Help us make the festival grander. Your contribution goes directly to the Rath Yatra preparations.</p>
-
-            {donationEnabled && (
-              <div className="flex flex-wrap gap-3">
-                {[11, 51, 101, 251, 501].map(amount => (
-                  <button
-                    key={amount}
-                    type="button"
-                    onClick={() => setDonationAmount(amount)}
-                    className={`px-4 py-2 border border-[var(--color-secondary)]/30 font-label-caps transition-colors ${donationAmount === amount ? 'bg-[var(--color-secondary)] text-[#000000]' : 'text-[var(--color-secondary)] hover:bg-[var(--color-secondary)]/10'}`}
-                  >
-                    ₹{amount}
-                  </button>
-                ))}
-                <div className="relative flex-1 min-w-[120px]">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-secondary)]">₹</span>
-                  <input
-                    type="number"
-                    placeholder="Custom"
-                    value={donationAmount || ''}
-                    onChange={(e) => setDonationAmount(parseInt(e.target.value) || 0)}
-                    className="w-full bg-transparent border border-[var(--color-secondary)]/30 pl-7 pr-3 py-2 text-[var(--color-on-surface)] focus:border-[var(--color-secondary)] focus:ring-0 font-label-caps"
-                  />
-                </div>
-              </div>
-            )}
           </div>
 
         </form>
@@ -313,7 +370,7 @@ function RegisterForm() {
               <p className="text-sm font-medium text-[var(--color-on-surface-variant)]">
                 1100+ log already register kar chuke hain — seats limited hain.
               </p>
-              <p className="text-[12px] font-bold label-caps text-[#ff7a59]">
+              <p className="text-[12px] font-bold label-caps text-[#ef4444]">
                 {timeLeft !== null && timeLeft <= 0 ? "Offer ending soon" : 
                  timeLeft !== null ? `Offer ends in ${formatTime(timeLeft)} mins` : "Ends Soon"}
               </p>
@@ -336,6 +393,24 @@ function RegisterForm() {
               {isLoading ? "PROCESSING..." : `₹${total} PAY & REGISTER`}
               {!isLoading && <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>arrow_forward</span>}
             </button>
+            
+            {process.env.NODE_ENV === 'development' && (
+              <button
+                type="button"
+                disabled={isLoading || !isFormValid}
+                onClick={(e) => {
+                  if (!isFormValid) {
+                    const form = document.querySelector('form');
+                    form?.reportValidity();
+                  } else {
+                    handleSkipPayment(e);
+                  }
+                }}
+                className={`w-full bg-gray-800 text-white text-sm font-bold py-3 flex items-center justify-center gap-2 hover:bg-gray-700 transition-colors ${(isLoading || !isFormValid) ? 'opacity-50 cursor-not-allowed' : ''}`}
+              >
+                SKIP PAYMENT (DEV ONLY)
+              </button>
+            )}
             <div className="flex items-center justify-center gap-2 text-[var(--color-on-surface-variant)] font-label-caps text-[12px] uppercase mt-2">
               <span className="material-symbols-outlined text-[16px]">lock</span>
               Secure payment via Razorpay
