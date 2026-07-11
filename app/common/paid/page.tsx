@@ -56,6 +56,7 @@ export default function Angle5() {
         }
         subheadline="Sirf serious logon ke liye — 19 July."
         source="paid-common"
+        showCommonFeatures={true}
       />
       <VideoBlock />
       <TestimonialCarousel />

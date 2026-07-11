@@ -6,6 +6,7 @@ interface HeroSectionProps {
   subheadline?: string | React.ReactNode;
   extraContent?: React.ReactNode;
   source?: string;
+  showCommonFeatures?: boolean;
 }
 
 export default function HeroSection({
@@ -18,6 +19,7 @@ export default function HeroSection({
   subheadline = "19 July — ek din jo focus wapas la dega.",
   extraContent,
   source = "angle1",
+  showCommonFeatures = false,
 }: HeroSectionProps) {
   return (
     <section className="relative flex h-auto min-h-screen w-full flex-col bg-[#131720] dark group/design-root overflow-x-hidden">
@@ -35,13 +37,30 @@ export default function HeroSection({
               <span className="material-symbols-outlined text-[10px] sm:text-sm">calendar_today</span>
               <span className="label-caps text-[9px] sm:text-xs whitespace-nowrap">19 July · 10 AM · Golf Ground, Dhanbad</span>
             </div>
+            
             <div className="flex flex-col gap-4 text-center max-w-4xl">
+              {showCommonFeatures && (
+                <div className="flex flex-wrap items-center justify-center gap-2 mb-2">
+                  <span className="border border-[var(--color-secondary)] text-[var(--color-secondary)] bg-transparent rounded-full px-3 py-1 text-[10px] sm:text-xs">Life Lessons, Drama & Debate</span>
+                  <span className="border border-[var(--color-secondary)] text-[var(--color-secondary)] bg-transparent rounded-full px-3 py-1 text-[10px] sm:text-xs">Live Music</span>
+                  <span className="border border-[var(--color-secondary)] text-[var(--color-secondary)] bg-transparent rounded-full px-3 py-1 text-[10px] sm:text-xs">Inspiring Community</span>
+                  <span className="border border-[var(--color-secondary)] text-[var(--color-secondary)] bg-transparent rounded-full px-3 py-1 text-[10px] sm:text-xs">Delicious Food</span>
+                </div>
+              )}
               <h1 className="text-white text-5xl font-black leading-tight tracking-[-0.033em] @[480px]:text-7xl font-display">
                 {headline}
               </h1>
               <h2 className="text-[#98a4c3] text-lg font-normal leading-relaxed @[480px]:text-2xl max-w-2xl mx-auto font-body">
                 {subheadline}
               </h2>
+              {showCommonFeatures && (
+                <div className="flex flex-wrap items-center justify-center gap-2 mt-2">
+                  <span className="font-label-caps text-[10px] sm:text-xs text-[#98a4c3] uppercase tracking-widest mr-1">Guidance From:</span>
+                  <span className="border border-[var(--color-secondary)] text-[var(--color-secondary)] bg-[#000000]/40 backdrop-blur-sm rounded-full px-3 py-1.5 text-[10px] sm:text-xs">IIT-ISM</span>
+                  <span className="border border-[var(--color-secondary)] text-[var(--color-secondary)] bg-[#000000]/40 backdrop-blur-sm rounded-full px-3 py-1.5 text-[10px] sm:text-xs">PMCH</span>
+                  <span className="border border-[var(--color-secondary)] text-[var(--color-secondary)] bg-[#000000]/40 backdrop-blur-sm rounded-full px-3 py-1.5 text-[10px] sm:text-xs">BCCL Professionals</span>
+                </div>
+              )}
               {extraContent}
             </div>
             <div className="flex flex-col items-center gap-4 mt-4">
