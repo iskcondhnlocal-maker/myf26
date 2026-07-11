@@ -13,6 +13,7 @@ import FAQSection from "@/components/FAQSection";
 import FinalCTA from "@/components/FinalCTA";
 import Footer from "@/components/Footer";
 import StickyBottomBar from "@/components/StickyBottomBar";
+import SocialProofWidget from "@/components/SocialProofWidget";
 
 export default function Angle5() {
   useEffect(() => {
@@ -69,6 +70,7 @@ export default function Angle5() {
       <FinalCTA source="common-offline" />
       <Footer />
       <StickyBottomBar source="common-offline" />
+      <SocialProofWidget />
     </div>
   );
 }

@@ -6,6 +6,7 @@ import { useCountdownTimer } from "@/hooks/useCountdownTimer";
 // @ts-expect-error - Cashfree JS SDK does not provide TypeScript declarations
 import { load } from "@cashfreepayments/cashfree-js";
 import Script from "next/script";
+import SocialProofWidget from '@/components/SocialProofWidget';
 
 function RegisterForm() {
   const router = useRouter();
@@ -419,6 +420,7 @@ function RegisterForm() {
         </div>
 
       </main>
+      <SocialProofWidget />
     </div>
   );
 }
