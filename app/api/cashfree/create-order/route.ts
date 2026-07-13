@@ -13,7 +13,7 @@ export async function POST(req: Request) {
     const body = await req.json();
     console.log("2. /api/cashfree/create-order - received body:", body);
     
-    const { amount, name, phone, email, source, bogo, guest_name, guest_phone, guest_email } = body;
+    const { amount, name, phone, email, source, bogo, guest_name, guest_phone, guest_email, orderId: clientOrderId } = body;
 
     const phoneRegex = /^[6-9]\d{9}$/;
     if (!phone || !phoneRegex.test(phone)) {
@@ -25,7 +25,7 @@ export async function POST(req: Request) {
 
     const timestamp = Date.now();
     const randomSuffix = Math.floor(Math.random() * 1000);
-    const order_id = `MYF26-${timestamp}-${randomSuffix}`;
+    const order_id = clientOrderId || `MYF26-${timestamp}-${randomSuffix}`;
     
     const order_amount = amount || 20;
     const customer_id = phone ? phone.replace(/[^0-9]/g, '') : `cust_${timestamp}`;

@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, Suspense, useRef } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCountdownTimer } from "@/hooks/useCountdownTimer";
@@ -33,6 +33,7 @@ function RegisterForm() {
 
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const orderIdRef = useRef<string | null>(null);
 
   const phoneRegex = /^[6-9]\d{9}$/;
   const isPhoneValid = phone === "" || phoneRegex.test(phone);
@@ -80,9 +81,28 @@ function RegisterForm() {
       bogoEnabled, donationEnabled, donationAmount, name, phone, email, guestName, guestPhone, guestEmail, source, campaignName, adsetName, adName
     }));
 
+    // Generate stable orderId for this session
+    if (!orderIdRef.current) {
+      orderIdRef.current = `MYF26-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+    }
+    const currentOrderId = orderIdRef.current;
+
+    // Fire pending webhook in background
+    fetch('/api/registrations/pending', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        order_id: currentOrderId,
+        name, phone, email, source, bogo: bogoEnabled, guest_name: guestName, guest_phone: guestPhone, guest_email: guestEmail,
+        campaign_name: campaignName, adset_name: adsetName, ad_name: adName,
+        role: "primary", linked_ticket_id: bogoEnabled ? `${currentOrderId}-G` : "", ticket_id: `${currentOrderId}-P`
+      })
+    }).catch(console.error);
+
     try {
       // 1. Create Order via Razorpay
       const payload = {
+        orderId: currentOrderId,
         amount: total,
         name,
         phone,
@@ -157,8 +177,27 @@ function RegisterForm() {
       bogoEnabled, donationEnabled, donationAmount, name, phone, email, guestName, guestPhone, guestEmail, source, campaignName, adsetName, adName
     }));
 
+    // Generate stable orderId for this session
+    if (!orderIdRef.current) {
+      orderIdRef.current = `MYF26-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+    }
+    const currentOrderId = orderIdRef.current;
+
+    // Fire pending webhook in background
+    fetch('/api/registrations/pending', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        order_id: currentOrderId,
+        name, phone, email, source, bogo: bogoEnabled, guest_name: guestName, guest_phone: guestPhone, guest_email: guestEmail,
+        campaign_name: campaignName, adset_name: adsetName, ad_name: adName,
+        role: "primary", linked_ticket_id: bogoEnabled ? `${currentOrderId}-G` : "", ticket_id: `${currentOrderId}-P`
+      })
+    }).catch(console.error);
+
     try {
       const payload = {
+        orderId: currentOrderId,
         amount: total,
         name,
         phone,

@@ -11,7 +11,7 @@ export async function POST(req: Request) {
     const body = await req.json();
     console.log("2. /api/razorpay/create-order - received body:", body);
     
-    const { amount, name, phone, email, source, campaign_name, adset_name, ad_name, bogo, guest_name, guest_phone, guest_email } = body;
+    const { amount, name, phone, email, source, campaign_name, adset_name, ad_name, bogo, guest_name, guest_phone, guest_email, orderId } = body;
 
     const phoneRegex = /^[6-9]\d{9}$/;
     if (!phone || !phoneRegex.test(phone)) {
@@ -23,7 +23,7 @@ export async function POST(req: Request) {
 
     const timestamp = Date.now();
     const randomSuffix = Math.floor(Math.random() * 1000);
-    const our_order_id = `MYF26-${timestamp}-${randomSuffix}`;
+    const our_order_id = orderId || `MYF26-${timestamp}-${randomSuffix}`;
     
     const order_amount = amount || 20;
 
