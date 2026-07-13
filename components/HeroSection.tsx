@@ -33,9 +33,9 @@ export default function HeroSection({
                 "linear-gradient(rgba(13, 27, 62, 0.8) 0%, rgba(19, 23, 32, 0.95) 100%), url('https://lh3.googleusercontent.com/aida-public/AB6AXuAW9HlGQGzjZNjz6qZgwjOtdxCSq3wwNZ2c5Cb4iVejQn7iMKe1YKkF0pOfkRM0TQj44T0NP_jP64_s-s1Yu_c8_eVr_D6J19DUjbTNDBAJ8rYmTWTygcgB7_DssVALI6jtFye0CR6Vief7NziVZV9xN38EJwVX58x4pla2uPlbQtbzYqILLykbnBboUtxWSm3h5r0jURFYX_3By4EL2sW811i7sYrVDKkU3Z6RirE4i8fI1N0UWYcD')",
             }}
           >
-            <div className="inline-flex items-center text-center max-w-[95vw] gap-1 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-[var(--color-secondary)]/10 border border-[var(--color-secondary)]/30 text-[var(--color-secondary)] mb-[clamp(1.5rem,5vw,2.5rem)]">
+            <div className="inline-flex items-center text-center max-w-[95vw] gap-1 sm:gap-2 px-2 sm:px-4 py-1.5 sm:py-2 rounded-full bg-[var(--color-secondary)]/10 border border-[var(--color-secondary)]/30 text-[var(--color-secondary)] mb-[clamp(1.5rem,5vw,2.5rem)]">
               <span className="material-symbols-outlined text-[10px] sm:text-sm shrink-0">calendar_today</span>
-              <span className="label-caps text-[9px] sm:text-xs leading-tight">19 July · 10 AM · Golf Ground, Dhanbad</span>
+              <span className="label-caps text-[clamp(8px,2.2vw,12px)] whitespace-nowrap">19 July · 10 AM · Golf Ground, Dhanbad</span>
             </div>
             
             <div className="flex flex-col gap-4 text-center max-w-4xl">
