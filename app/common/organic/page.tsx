@@ -59,14 +59,14 @@ export default function Angle5() {
         source="common-organic"
         showCommonFeatures={true}
       />
-      <VideoBlock />
+      {/* <VideoBlock /> */}
       <PricingSection source="common-organic" />
-      <TestimonialCarousel />
-      <ProblemSection />
-      <SolutionSection />
       <WhoItsForSection />
       <CredibilityStats />
       <FAQSection />
+      <ProblemSection />
+      <SolutionSection />
+      <TestimonialCarousel />
       <FinalCTA source="common-organic" />
       <Footer />
       <StickyBottomBar source="common-organic" />
