@@ -48,29 +48,35 @@ export default function TestimonialCarousel() {
     }
   ];
 
-  const duplicatedTestimonials = [...testimonials, ...testimonials, ...testimonials];
-
   useEffect(() => {
     let animationId: number;
     let isHovering = false;
-    let lastTime = 0;
+    let currentX = 0;
     
     const scrollContainer = scrollRef.current;
     if (!scrollContainer) return;
+    
+    const wrapper = scrollContainer.querySelector('.scroll-wrapper') as HTMLElement;
+    if (!wrapper) return;
 
-    const scroll = (timestamp: number) => {
-      if (!lastTime) lastTime = timestamp;
-      const deltaTime = timestamp - lastTime;
-      
-      if (!isHovering && deltaTime > 16) {
-        scrollContainer.scrollLeft += 1;
+    const scroll = () => {
+      if (!isHovering) {
+        currentX -= 1; // 1px per frame speed
         
-        // Reset scroll position for infinite loop effect
-        if (scrollContainer.scrollLeft >= scrollContainer.scrollWidth / 3) {
-          scrollContainer.scrollLeft -= scrollContainer.scrollWidth / 3;
+        const firstChild = wrapper.firstElementChild as HTMLElement;
+        if (firstChild) {
+          // Calculate exact width including the gap (gap-6 = 24px)
+          const style = window.getComputedStyle(firstChild);
+          const margin = parseFloat(style.marginRight) || 0;
+          const itemWidth = firstChild.offsetWidth + 24; // hardcode 24px gap for stability
+          
+          // Once scrolled past the first item
+          if (Math.abs(currentX) >= itemWidth) {
+            currentX += itemWidth; // snap back
+            wrapper.appendChild(firstChild); // move first to last
+          }
         }
-        
-        lastTime = timestamp;
+        wrapper.style.transform = `translate3d(${currentX}px, 0, 0)`;
       }
       animationId = requestAnimationFrame(scroll);
     };
@@ -101,13 +107,12 @@ export default function TestimonialCarousel() {
   }, []);
 
   return (
-    <div className="py-8 font-body relative w-full">
+    <div className="py-8 font-body relative w-full overflow-hidden" ref={scrollRef}>
       <div 
-        ref={scrollRef}
-        className="flex items-stretch gap-6 px-4 overflow-x-auto scrollbar-hide w-full"
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        className="scroll-wrapper flex items-stretch gap-6 px-4 w-max"
+        style={{ willChange: 'transform' }}
       >
-        {duplicatedTestimonials.map((testimonial, idx) => (
+        {testimonials.map((testimonial, idx) => (
           <div key={idx} className="flex h-auto w-80 sm:w-96 flex-col gap-4 rounded-2xl bg-[var(--color-surface-container-low)] p-4 border border-[var(--color-outline-variant)]/20 shadow-lg shrink-0">
             <div
               className="w-full bg-top bg-no-repeat aspect-square bg-cover rounded-xl"

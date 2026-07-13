@@ -60,10 +60,10 @@ export default function Angle5() {
         showCommonFeatures={true}
       />
       <VideoBlock />
+      <PricingSection source="common-offline" />
       <TestimonialCarousel />
       <ProblemSection />
       <SolutionSection />
-      <PricingSection source="common-offline" />
       <WhoItsForSection />
       <CredibilityStats />
       <FAQSection />

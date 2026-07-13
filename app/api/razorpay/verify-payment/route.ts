@@ -13,7 +13,7 @@ export async function POST(req: Request) {
     const body = await req.json();
     console.log("4. /api/razorpay/verify-payment - received body:", body);
     
-    const { orderId, razorpay_payment_id, razorpay_order_id, razorpay_signature, name, phone, email, source, bogo, guest_name, guest_phone, guest_email } = body;
+    const { orderId, razorpay_payment_id, razorpay_order_id, razorpay_signature, name, phone, email, source, campaign_name, adset_name, ad_name, bogo, guest_name, guest_phone, guest_email } = body;
 
     if (!orderId || !razorpay_payment_id || !razorpay_order_id || !razorpay_signature) {
       return NextResponse.json({ success: false, error: 'Missing payment details' }, { status: 400 });
@@ -32,6 +32,9 @@ export async function POST(req: Request) {
         phone,
         email,
         source,
+        campaign_name,
+        adset_name,
+        ad_name,
         bogo,
         guest_name,
         guest_phone,
@@ -74,6 +77,9 @@ export async function POST(req: Request) {
       phone,
       email,
       source,
+      campaign_name,
+      adset_name,
+      ad_name,
       bogo,
       guest_name,
       guest_phone,

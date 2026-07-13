@@ -12,6 +12,9 @@ function RegisterForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const source = searchParams.get("source") || "offline";
+  const campaignName = searchParams.get("utm_medium") || "";
+  const adsetName = searchParams.get("utm_campaign") || "";
+  const adName = searchParams.get("utm_content") || "";
   const basePrice = 20;
   const { timeLeft, formatTime } = useCountdownTimer();
 
@@ -74,7 +77,7 @@ function RegisterForm() {
 
     // Save state before redirecting
     sessionStorage.setItem("myf_register_state", JSON.stringify({
-      bogoEnabled, donationEnabled, donationAmount, name, phone, email, guestName, guestPhone, guestEmail, source
+      bogoEnabled, donationEnabled, donationAmount, name, phone, email, guestName, guestPhone, guestEmail, source, campaignName, adsetName, adName
     }));
 
     try {
@@ -85,6 +88,9 @@ function RegisterForm() {
         phone,
         email,
         source,
+        campaign_name: campaignName,
+        adset_name: adsetName,
+        ad_name: adName,
         bogo: bogoEnabled,
         guest_name: guestName,
         guest_phone: guestPhone,
@@ -148,7 +154,7 @@ function RegisterForm() {
     setErrorMsg("");
 
     sessionStorage.setItem("myf_register_state", JSON.stringify({
-      bogoEnabled, donationEnabled, donationAmount, name, phone, email, guestName, guestPhone, guestEmail, source
+      bogoEnabled, donationEnabled, donationAmount, name, phone, email, guestName, guestPhone, guestEmail, source, campaignName, adsetName, adName
     }));
 
     try {
@@ -158,6 +164,9 @@ function RegisterForm() {
         phone,
         email,
         source,
+        campaign_name: campaignName,
+        adset_name: adsetName,
+        ad_name: adName,
         bogo: bogoEnabled,
         guest_name: guestName,
         guest_phone: guestPhone,

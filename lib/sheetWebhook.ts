@@ -10,8 +10,11 @@ export async function processWebhookAndTickets(params: {
   guest_email?: string;
   orderAmount: number;
   donationAmount: number;
+  campaign_name?: string;
+  adset_name?: string;
+  ad_name?: string;
 }) {
-  const { orderId, name, phone, email, source, bogo, guest_name, guest_phone, guest_email, orderAmount, donationAmount } = params;
+  const { orderId, name, phone, email, source, bogo, guest_name, guest_phone, guest_email, orderAmount, donationAmount, campaign_name, adset_name, ad_name } = params;
 
   const primaryTicketId = `${orderId}-P`;
   let guestTicketId = null;
@@ -62,6 +65,9 @@ export async function processWebhookAndTickets(params: {
           Email: email,
           source: source || "",
           Source: source || "",
+          campaign_name: campaign_name || "",
+          adset_name: adset_name || "",
+          ad_name: ad_name || "",
           order_id: orderId,
           linked_ticket_id: guestTicketId,
           amount: orderAmount,
@@ -118,6 +124,9 @@ export async function processWebhookAndTickets(params: {
             Email: guest_email,
             source: source || "",
             Source: source || "",
+            campaign_name: campaign_name || "",
+            adset_name: adset_name || "",
+            ad_name: ad_name || "",
             order_id: orderId,
             linked_ticket_id: primaryTicketId,
             amount: 0, // BOGO is free

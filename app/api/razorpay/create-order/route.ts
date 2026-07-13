@@ -11,7 +11,7 @@ export async function POST(req: Request) {
     const body = await req.json();
     console.log("2. /api/razorpay/create-order - received body:", body);
     
-    const { amount, name, phone, email, source, bogo, guest_name, guest_phone, guest_email } = body;
+    const { amount, name, phone, email, source, campaign_name, adset_name, ad_name, bogo, guest_name, guest_phone, guest_email } = body;
 
     const phoneRegex = /^[6-9]\d{9}$/;
     if (!phone || !phoneRegex.test(phone)) {
@@ -36,6 +36,9 @@ export async function POST(req: Request) {
         phone,
         email,
         source,
+        campaign_name: campaign_name || "",
+        adset_name: adset_name || "",
+        ad_name: ad_name || "",
         bogo: bogo ? "true" : "false",
         guest_name: guest_name || "",
         guest_phone: guest_phone || ""

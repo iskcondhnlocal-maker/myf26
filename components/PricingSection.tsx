@@ -13,11 +13,11 @@ export default function PricingSection({ source = "paid-angle1" }: { source?: st
           <div className="grid md:grid-cols-2 gap-6 mb-12">
             <div className="flex items-center gap-4 p-4 rounded-xl bg-[var(--color-surface-variant)]/40">
               <span className="material-symbols-outlined text-[var(--color-secondary)]" style={{ fontVariationSettings: "'FILL' 1" }}>stars</span>
-              <span className="text-lg font-medium">Leadership Session (Life Skills)</span>
+              <span className="text-lg font-medium">Success & Life Lessons</span>
             </div>
             <div className="flex items-center gap-4 p-4 rounded-xl bg-[var(--color-surface-variant)]/40">
               <span className="material-symbols-outlined text-[var(--color-secondary)]" style={{ fontVariationSettings: "'FILL' 1" }}>school</span>
-              <span className="text-lg font-medium">IIT-ISM Students Personal Guidance</span>
+              <span className="text-lg font-medium leading-tight">Personal Guidance From Doctors, Engineers, Entrepreneurs & Govt. Officers</span>
             </div>
             <div className="flex items-center gap-4 p-4 rounded-xl bg-[var(--color-surface-variant)]/40">
               <span className="material-symbols-outlined text-[var(--color-secondary)]" style={{ fontVariationSettings: "'FILL' 1" }}>event</span>

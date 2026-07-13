@@ -59,14 +59,14 @@ export default function Angle5() {
         source="paid-common"
         showCommonFeatures={true}
       />
-      <VideoBlock />
-      <TestimonialCarousel />
-      <ProblemSection />
-      <SolutionSection />
+      {/* <VideoBlock /> */}
       <PricingSection source="paid-common" />
       <WhoItsForSection />
       <CredibilityStats />
       <FAQSection />
+      <ProblemSection />
+      <SolutionSection />
+      <TestimonialCarousel />
       <FinalCTA source="paid-common" />
       <Footer />
       <StickyBottomBar source="paid-common" />
