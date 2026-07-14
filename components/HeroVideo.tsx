@@ -116,6 +116,7 @@ export default function HeroVideo() {
     <div ref={containerRef} className="relative w-full h-full overflow-hidden group z-20 bg-black">
       <video
         ref={videoRef}
+        onClick={togglePlay}
         src="https://pub-f709223223e64d77b65165c308171877.r2.dev/06_compressed.mp4"
         className="w-full aspect-video object-cover bg-black"
         controls={false}
@@ -150,7 +151,7 @@ export default function HeroVideo() {
       )}
 
       {/* Controls Overlay - Visible only after interaction, and shown on hover or when paused */}
-      <div className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent flex flex-col transition-opacity duration-300 z-20 ${!hasStartedInteracting ? 'opacity-0 pointer-events-none' : (isPlaying ? 'opacity-0 group-hover:opacity-100' : 'opacity-100')}`}>
+      <div className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent flex flex-col transition-opacity duration-300 z-20 ${!hasStartedInteracting ? 'opacity-0 pointer-events-none' : (isPlaying ? 'opacity-100 md:opacity-0 md:group-hover:opacity-100' : 'opacity-100')}`}>
         
         <div className="flex items-center w-full p-4 gap-6">
           
