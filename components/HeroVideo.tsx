@@ -113,12 +113,12 @@ export default function HeroVideo() {
   };
 
   return (
-    <div ref={containerRef} className="relative w-full h-full overflow-hidden group z-20 bg-black">
+    <div ref={containerRef} className="relative w-full h-full overflow-hidden group z-20 bg-black flex items-center justify-center">
       <video
         ref={videoRef}
         onClick={togglePlay}
         src="https://pub-f709223223e64d77b65165c308171877.r2.dev/06_compressed.mp4"
-        className="w-full aspect-video object-cover bg-black"
+        className="w-full h-full max-h-full object-contain bg-black"
         controls={false}
         controlsList="nodownload nofullscreen noremoteplayback"
         disablePictureInPicture
@@ -153,51 +153,52 @@ export default function HeroVideo() {
       {/* Controls Overlay - Visible only after interaction, and shown on hover or when paused */}
       <div className={`absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent flex flex-col transition-opacity duration-300 z-20 ${!hasStartedInteracting ? 'opacity-0 pointer-events-none' : (isPlaying ? 'opacity-100 md:opacity-0 md:group-hover:opacity-100' : 'opacity-100')}`}>
         
-        <div className="flex items-center w-full p-4 gap-6">
+        {/* Progress Bar (Full width on its own row) */}
+        <div className="w-full px-3 sm:px-4 pt-4 pb-1">
+          <div 
+            className="w-full h-6 flex items-center cursor-pointer group/progress"
+            onClick={handleSeek}
+          >
+            <div className="w-full h-[4px] group-hover/progress:h-[6px] transition-all bg-white/20 rounded-full overflow-hidden relative">
+              <div 
+                className="absolute top-0 left-0 h-full bg-[var(--color-secondary)] transition-all duration-100 ease-linear"
+                style={{ width: `${duration > 0 ? (currentTime / duration) * 100 : 0}%` }}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between w-full px-3 sm:px-4 pb-3 sm:pb-4">
           
-          {/* Play/Pause & Mute */}
-          <div className="flex items-center gap-3 shrink-0">
+          {/* Play/Pause, Mute & Time */}
+          <div className="flex items-center gap-2 sm:gap-4 shrink-0">
             <button 
               onClick={togglePlay}
-              className="w-10 h-10 flex items-center justify-center rounded-full bg-[var(--color-secondary)] text-[#000000] hover:bg-white transition-colors"
+              className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-[var(--color-secondary)] text-[#000000] hover:bg-white transition-colors"
               title={isPlaying ? "Pause" : "Play"}
             >
-              <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>
+              <span className="material-symbols-outlined text-[20px] sm:text-[24px]" style={{ fontVariationSettings: "'FILL' 1" }}>
                 {isPlaying ? 'pause' : 'play_arrow'}
               </span>
             </button>
 
             <button 
               onClick={toggleMute}
-              className="w-10 h-10 flex items-center justify-center rounded-full bg-white/20 text-white hover:bg-white/40 transition-colors backdrop-blur-md"
+              className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-white/20 text-white hover:bg-white/40 transition-colors backdrop-blur-md"
               title={isMuted ? "Unmute" : "Mute"}
             >
-              <span className="material-symbols-outlined text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>
+              <span className="material-symbols-outlined text-lg sm:text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>
                 {isMuted ? 'volume_off' : 'volume_up'}
               </span>
             </button>
-          </div>
-
-          {/* Progress Bar & Time */}
-          <div className="flex-grow flex items-center gap-4">
-            <div 
-              className="flex-grow h-8 flex items-center cursor-pointer group/progress"
-              onClick={handleSeek}
-            >
-              <div className="w-full h-[3px] group-hover/progress:h-[5px] transition-all bg-white/20 rounded-full overflow-hidden relative">
-                <div 
-                  className="absolute top-0 left-0 h-full bg-[var(--color-secondary)] transition-all duration-100 ease-linear"
-                  style={{ width: `${duration > 0 ? (currentTime / duration) * 100 : 0}%` }}
-                />
-              </div>
-            </div>
-            <span className="text-white text-xs font-mono font-medium opacity-80 tracking-wider shrink-0 min-w-[70px] text-right">
+            
+            <span className="text-white text-[10px] sm:text-xs font-mono font-medium opacity-80 tracking-wider shrink-0 ml-1 sm:ml-0">
               {formatTime(currentTime)} / {formatTime(duration)}
             </span>
           </div>
 
           {/* Speed & Fullscreen */}
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             <div className="flex items-center gap-1 bg-black/50 backdrop-blur-md rounded-lg p-1 border border-white/10 hidden @sm:flex">
               {[0.5, 1, 1.5, 2].map((speed) => (
                 <button
@@ -216,15 +217,14 @@ export default function HeroVideo() {
 
             <button 
               onClick={toggleFullscreen}
-              className="w-10 h-10 flex items-center justify-center rounded-full bg-white/20 text-white hover:bg-white/40 transition-colors backdrop-blur-md"
+              className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center rounded-full bg-white/20 text-white hover:bg-white/40 transition-colors backdrop-blur-md"
               title="Fullscreen"
             >
-              <span className="material-symbols-outlined text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>
+              <span className="material-symbols-outlined text-lg sm:text-xl">
                 fullscreen
               </span>
             </button>
           </div>
-
         </div>
       </div>
     </div>
