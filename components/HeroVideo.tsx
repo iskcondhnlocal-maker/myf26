@@ -10,6 +10,8 @@ export default function HeroVideo() {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [hasStartedInteracting, setHasStartedInteracting] = useState(false); // Tracks if user has clicked play to start the 'real' experience
+  const [isDragging, setIsDragging] = useState(false);
+  const progressBarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Attempt to start autoplay on mount
@@ -101,15 +103,32 @@ export default function HeroVideo() {
     }
   };
 
-  const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (videoRef.current && duration > 0) {
-      const rect = e.currentTarget.getBoundingClientRect();
-      const clickX = e.clientX - rect.left;
-      const percentage = Math.max(0, Math.min(1, clickX / rect.width));
-      const newTime = percentage * duration;
+  const handleSeek = (e: React.MouseEvent<HTMLDivElement> | React.PointerEvent<HTMLDivElement>) => {
+    if (videoRef.current && progressBarRef.current) {
+      const rect = progressBarRef.current.getBoundingClientRect();
+      const x = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
+      const percent = x / rect.width;
+      const newTime = percent * videoRef.current.duration;
       videoRef.current.currentTime = newTime;
       setCurrentTime(newTime);
     }
+  };
+
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    e.currentTarget.setPointerCapture(e.pointerId);
+    setIsDragging(true);
+    handleSeek(e);
+  };
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (isDragging) {
+      handleSeek(e);
+    }
+  };
+
+  const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    e.currentTarget.releasePointerCapture(e.pointerId);
+    setIsDragging(false);
   };
 
   return (
@@ -156,8 +175,12 @@ export default function HeroVideo() {
         {/* Progress Bar (Full width on its own row) */}
         <div className="w-full px-3 sm:px-4 pt-4 pb-1">
           <div 
-            className="w-full h-6 flex items-center cursor-pointer group/progress"
-            onClick={handleSeek}
+            ref={progressBarRef}
+            className="w-full h-6 flex items-center cursor-pointer group/progress touch-none"
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerUp}
+            onPointerCancel={handlePointerUp}
           >
             <div className="w-full h-[4px] group-hover/progress:h-[6px] transition-all bg-white/20 rounded-full overflow-hidden relative">
               <div 
@@ -199,12 +222,12 @@ export default function HeroVideo() {
 
           {/* Speed & Fullscreen */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-            <div className="flex items-center gap-1 bg-black/50 backdrop-blur-md rounded-lg p-1 border border-white/10 hidden @sm:flex">
+            <div className="flex items-center gap-0.5 sm:gap-1 bg-black/50 backdrop-blur-md rounded-lg p-1 border border-white/10">
               {[0.5, 1, 1.5, 2].map((speed) => (
                 <button
                   key={speed}
                   onClick={() => handleSpeedChange(speed)}
-                  className={`px-3 py-1.5 rounded text-xs font-black transition-colors ${
+                  className={`px-2 sm:px-3 py-1 sm:py-1.5 rounded text-[10px] sm:text-xs font-black transition-colors ${
                     playbackRate === speed 
                       ? 'bg-[var(--color-secondary)] text-[#000000]' 
                       : 'text-white hover:bg-white/20'
