@@ -101,11 +101,22 @@ export default function HeroVideo() {
     }
   };
 
+  const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (videoRef.current && duration > 0) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const percentage = Math.max(0, Math.min(1, clickX / rect.width));
+      const newTime = percentage * duration;
+      videoRef.current.currentTime = newTime;
+      setCurrentTime(newTime);
+    }
+  };
+
   return (
     <div ref={containerRef} className="relative w-full h-full overflow-hidden group z-20 bg-black">
       <video
         ref={videoRef}
-        src="https://pub-f709223223e64d77b65165c308171877.r2.dev/landing_page_4_compressed.mp4"
+        src="https://pub-f709223223e64d77b65165c308171877.r2.dev/06_compressed.mp4"
         className="w-full aspect-video object-cover bg-black"
         controls={false}
         controlsList="nodownload nofullscreen noremoteplayback"
@@ -168,11 +179,16 @@ export default function HeroVideo() {
 
           {/* Progress Bar & Time */}
           <div className="flex-grow flex items-center gap-4">
-            <div className="flex-grow h-[3px] bg-white/20 rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-[var(--color-secondary)] transition-all duration-100 ease-linear"
-                style={{ width: `${duration > 0 ? (currentTime / duration) * 100 : 0}%` }}
-              />
+            <div 
+              className="flex-grow h-8 flex items-center cursor-pointer group/progress"
+              onClick={handleSeek}
+            >
+              <div className="w-full h-[3px] group-hover/progress:h-[5px] transition-all bg-white/20 rounded-full overflow-hidden relative">
+                <div 
+                  className="absolute top-0 left-0 h-full bg-[var(--color-secondary)] transition-all duration-100 ease-linear"
+                  style={{ width: `${duration > 0 ? (currentTime / duration) * 100 : 0}%` }}
+                />
+              </div>
             </div>
             <span className="text-white text-xs font-mono font-medium opacity-80 tracking-wider shrink-0 min-w-[70px] text-right">
               {formatTime(currentTime)} / {formatTime(duration)}

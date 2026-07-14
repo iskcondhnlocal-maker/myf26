@@ -59,7 +59,7 @@ export default function Angle5() {
         source="common-offline"
         showCommonFeatures={true}
       />
-      {/* <VideoBlock /> */}
+      <VideoBlock />
       <PricingSection source="common-offline" />
       <WhoItsForSection />
       <CredibilityStats />

@@ -59,7 +59,7 @@ export default function Angle5() {
         source="paid-common"
         showCommonFeatures={true}
       />
-      {/* <VideoBlock /> */}
+      <VideoBlock />
       <PricingSection source="paid-common" />
       <WhoItsForSection />
       <CredibilityStats />
