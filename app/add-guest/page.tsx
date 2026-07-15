@@ -44,15 +44,22 @@ export default function AddGuestPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       });
-      const data = await response.json();
+      
+      const text = await response.text();
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch (parseError) {
+        throw new Error('Server returned an invalid response. It might be taking too long.');
+      }
 
       if (data.success) {
         setSuccess(true);
       } else {
         setError(data.error || 'Something went wrong. Please try again.');
       }
-    } catch (err) {
-      setError('Network error. Please check your connection and try again.');
+    } catch (err: any) {
+      setError(err.message || 'Network error. Please check your connection and try again.');
     } finally {
       setLoading(false);
     }
@@ -85,9 +92,7 @@ export default function AddGuestPage() {
               </div>
               <h2 className="text-2xl font-black text-white mb-3 tracking-tight">Success!</h2>
               <p className="text-[var(--color-on-surface-variant)] text-sm leading-relaxed mb-8">
-                {formData.guest_email 
-                  ? "Guest add ho gaya! Unhe QR code email par milega."
-                  : "Guest add ho gaya! Entry ke time Primary ke saath aa sakte hain."}
+                Guest add ho gaya! Unhe QR code email par milega.
               </p>
               <button 
                 onClick={() => {
@@ -185,15 +190,15 @@ export default function AddGuestPage() {
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold tracking-wider text-white/70 uppercase ml-1 flex justify-between">
-                  <span>Guest Ka Email</span>
-                  <span className="text-white/40 italic lowercase">(Optional)</span>
+                <label className="text-xs font-semibold tracking-wider text-white/70 uppercase ml-1">
+                  Guest Ka Email
                 </label>
                 <input
                   type="email"
                   name="guest_email"
                   value={formData.guest_email}
                   onChange={handleChange}
+                  required
                   placeholder="guest@example.com"
                   className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3.5 text-white text-base placeholder:text-white/20 focus:outline-none focus:border-[var(--color-secondary)] focus:ring-1 focus:ring-[var(--color-secondary)] transition-all"
                 />
