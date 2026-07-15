@@ -135,7 +135,6 @@ export default function HeroVideo() {
     <div ref={containerRef} className="relative w-full h-full overflow-hidden group z-20 bg-black flex items-center justify-center">
       <video
         ref={videoRef}
-        onClick={togglePlay}
         src="https://pub-f709223223e64d77b65165c308171877.r2.dev/06_compressed.mp4"
         className="w-full h-full max-h-full object-contain bg-black"
         controls={false}
