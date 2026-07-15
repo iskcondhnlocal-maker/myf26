@@ -18,6 +18,7 @@ export default function HeroVideo() {
     if (videoRef.current) {
       videoRef.current.play().catch(e => {
         // Browser might block autoplay
+        console.error("Autoplay blocked or failed on mount. This is common in Instagram/FB in-app browsers if they restrict autoplay policies:", e);
         setIsPlaying(false);
       });
       // Safety check for duration if it's already loaded
@@ -140,7 +141,7 @@ export default function HeroVideo() {
     <div ref={containerRef} className="relative w-full h-full overflow-hidden group z-20 bg-black flex items-center justify-center">
       <video
         ref={videoRef}
-        src="https://pub-f709223223e64d77b65165c308171877.r2.dev/06_compressed.mp4"
+        src="https://pub-f709223223e64d77b65165c308171877.r2.dev/06_smaller_v2.mp4"
         className="w-full h-full max-h-full object-contain bg-black"
         controls={false}
         controlsList="nodownload nofullscreen noremoteplayback"
@@ -148,7 +149,7 @@ export default function HeroVideo() {
         onContextMenu={(e) => e.preventDefault()}
         muted
         playsInline
-        autoPlay
+        preload="none"
         loop
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
