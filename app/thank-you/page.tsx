@@ -27,7 +27,7 @@ function ThankYouContent() {
 
     const verifyPayment = async () => {
       try {
-        const savedStateStr = sessionStorage.getItem("myf_register_state");
+        const savedStateStr = localStorage.getItem("myf_register_state");
         const savedState = savedStateStr ? JSON.parse(savedStateStr) : {};
 
         const payload = {
@@ -62,7 +62,7 @@ function ThankYouContent() {
         if (data.success) {
           setTickets(data.tickets || []);
           setStatus("success");
-          sessionStorage.removeItem("myf_register_state");
+          localStorage.removeItem("myf_register_state");
           
           // Push successful purchase event to GTM dataLayer
           if (typeof window !== "undefined") {

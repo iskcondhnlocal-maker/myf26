@@ -48,7 +48,7 @@ function RegisterForm() {
     load({ mode: "sandbox" }).then((cf: any) => setCashfree(cf));
 
     // Restore form data if returning from checkout
-    const savedStateStr = sessionStorage.getItem("myf_register_state");
+    const savedStateStr = localStorage.getItem("myf_register_state");
     if (savedStateStr) {
       try {
         const savedState = JSON.parse(savedStateStr);
@@ -76,8 +76,8 @@ function RegisterForm() {
     setIsLoading(true);
     setErrorMsg("");
 
-    // Save state before redirecting
-    sessionStorage.setItem("myf_register_state", JSON.stringify({
+    // Save state before Razorpay popup
+    localStorage.setItem("myf_register_state", JSON.stringify({
       bogoEnabled, donationEnabled, donationAmount, name, phone, email, guestName, guestPhone, guestEmail, source, campaignName, adsetName, adName
     }));
 
@@ -173,7 +173,7 @@ function RegisterForm() {
     setIsLoading(true);
     setErrorMsg("");
 
-    sessionStorage.setItem("myf_register_state", JSON.stringify({
+    localStorage.setItem("myf_register_state", JSON.stringify({
       bogoEnabled, donationEnabled, donationAmount, name, phone, email, guestName, guestPhone, guestEmail, source, campaignName, adsetName, adName
     }));
 

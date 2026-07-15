@@ -50,14 +50,19 @@ export default function HeroVideo() {
     }
   };
 
-  const startRealVideo = () => {
+  const startRealVideo = async () => {
     if (videoRef.current) {
-      videoRef.current.currentTime = 0;
-      videoRef.current.muted = false;
-      videoRef.current.play();
-      setIsMuted(false);
-      setIsPlaying(true);
-      setHasStartedInteracting(true);
+      try {
+        videoRef.current.currentTime = 0;
+        videoRef.current.muted = false;
+        videoRef.current.loop = false;
+        await videoRef.current.play();
+        setIsMuted(false);
+        setIsPlaying(true);
+        setHasStartedInteracting(true);
+      } catch (err) {
+        console.error("Video play failed:", err);
+      }
     }
   };
 
@@ -69,7 +74,7 @@ export default function HeroVideo() {
 
     if (videoRef.current) {
       if (videoRef.current.paused) {
-        videoRef.current.play();
+        videoRef.current.play().catch(console.error);
       } else {
         videoRef.current.pause();
       }
@@ -141,10 +146,10 @@ export default function HeroVideo() {
         controlsList="nodownload nofullscreen noremoteplayback"
         disablePictureInPicture
         onContextMenu={(e) => e.preventDefault()}
-        muted={isMuted}
+        muted
         playsInline
         autoPlay
-        loop={!hasStartedInteracting}
+        loop
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
         onEnded={() => setIsPlaying(false)}
@@ -156,8 +161,9 @@ export default function HeroVideo() {
 
       {/* Large centered play button - visible initially (before interaction) OR when paused after interaction */}
       {(!hasStartedInteracting || !isPlaying) && (
-        <div 
-          className="absolute inset-0 flex items-center justify-center bg-black/40 cursor-pointer transition-colors hover:bg-black/20 z-10"
+        <button 
+          type="button"
+          className="absolute inset-0 w-full h-full flex items-center justify-center bg-black/40 cursor-pointer transition-colors hover:bg-black/20 z-10 appearance-none border-none outline-none"
           onClick={togglePlay}
         >
           <div className="w-20 h-20 rounded-full bg-[var(--color-secondary)]/90 flex items-center justify-center shadow-[0_0_20px_rgba(34,211,238,0.5)] transition-transform hover:scale-110 active:scale-95">
@@ -165,7 +171,7 @@ export default function HeroVideo() {
               play_arrow
             </span>
           </div>
-        </div>
+        </button>
       )}
 
       {/* Controls Overlay - Visible only after interaction, and shown on hover or when paused */}
