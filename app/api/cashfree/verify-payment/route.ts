@@ -27,6 +27,16 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: false }, { status: 400 });
     }
 
+    const customerDetails = orderResponse.data?.customer_details || {};
+    // Extract metadata if available (for guest info, bogo etc. if stored in order_meta or tags)
+    // For now we'll just fall back the primary details
+    const finalName = name || customerDetails.customer_name || "";
+    const finalPhone = phone || customerDetails.customer_phone || "";
+    const finalEmail = email || customerDetails.customer_email || "";
+    
+    // We can't easily fetch guest details from Cashfree unless they were stored in order_meta or tags. 
+    // Usually Cashfree is a secondary gateway anyway.
+
     const primaryTicketId = `${orderId}-P`;
     let guestTicketId = null;
     
@@ -39,9 +49,9 @@ export async function POST(req: Request) {
 
     const ticketsCreated = await processWebhookAndTickets({
       orderId,
-      name,
-      phone,
-      email,
+      name: finalName,
+      phone: finalPhone,
+      email: finalEmail,
       source,
       bogo,
       guest_name,

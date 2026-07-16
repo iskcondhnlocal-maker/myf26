@@ -67,23 +67,38 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: false, error: 'Payment not captured' }, { status: 400 });
     }
 
-    // amount is in paise
+    // Fetch the original order to get the fallback data from notes
+    const order = await razorpay.orders.fetch(razorpay_order_id);
+    const notes = order.notes || {};
+
+    const finalName = name || notes.name || "";
+    const finalPhone = phone || notes.phone || "";
+    const finalEmail = email || notes.email || "";
+    const finalSource = source || notes.source || "";
+    const finalCampaignName = campaign_name || notes.campaign_name || "";
+    const finalAdsetName = adset_name || notes.adset_name || "";
+    const finalAdName = ad_name || notes.ad_name || "";
+    const finalBogo = bogo !== undefined ? bogo : (notes.bogo === "true");
+    const finalGuestName = guest_name || notes.guest_name || "";
+    const finalGuestPhone = guest_phone || notes.guest_phone || "";
+    const finalGuestEmail = guest_email || notes.guest_email || "";
+
     const orderAmount = Number(payment.amount) / 100;
     const donationAmount = Math.max(0, orderAmount - 20);
 
     const ticketsCreated = await processWebhookAndTickets({
       orderId,
-      name,
-      phone,
-      email,
-      source,
-      campaign_name,
-      adset_name,
-      ad_name,
-      bogo,
-      guest_name,
-      guest_phone,
-      guest_email,
+      name: finalName,
+      phone: finalPhone,
+      email: finalEmail,
+      source: finalSource,
+      campaign_name: finalCampaignName,
+      adset_name: finalAdsetName,
+      ad_name: finalAdName,
+      bogo: finalBogo,
+      guest_name: finalGuestName,
+      guest_phone: finalGuestPhone,
+      guest_email: finalGuestEmail,
       orderAmount,
       donationAmount
     });
