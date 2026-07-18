@@ -22,7 +22,7 @@ export default function StickyBottomBar({ source = "paid-angle1" }: { source?: s
           </div>
         </div>
         <Link data-gtm-cta="register-intent" href={`/register?source=${source}`} className="btn-shine-pulse w-full sm:flex-1 sm:max-w-[220px] text-center bg-[var(--color-secondary)] text-[var(--color-on-secondary-container)] px-4 py-3 sm:py-3.5 rounded-lg font-bold text-[14px] sm:text-[15px] active:scale-95 shrink-0 whitespace-nowrap overflow-hidden relative">
-          <span className="relative z-10">Register Now</span>
+          <span className="relative z-10">Book Last-Minute Ticket</span>
         </Link>
       </div>
     </div>

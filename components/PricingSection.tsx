@@ -44,7 +44,7 @@ export default function PricingSection({ source = "paid-angle1" }: { source?: st
               <span className="text-[var(--color-on-surface-variant)] line-through text-3xl md:text-4xl font-display">₹499</span>
             </div>
             <Link data-gtm-cta="register-intent" href={`/register?source=${source}`} className="btn-shine-pulse relative overflow-hidden w-full md:w-auto min-w-[300px] cursor-pointer flex items-center justify-center rounded-none h-16 px-10 bg-[var(--color-secondary)] text-[var(--color-on-secondary-container)] text-xl font-black transition-transform active:scale-95 font-display">
-              <span className="relative z-10">Claim Your Seat Now</span>
+              <span className="relative z-10">Book Last-Minute Ticket</span>
             </Link>
             <p className="text-[var(--color-on-surface-variant)] mt-4 text-sm">*Sirf pehle 500 registrations ke liye special price</p>
           </div>

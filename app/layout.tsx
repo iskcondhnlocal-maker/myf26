@@ -3,6 +3,7 @@ import { Anybody, Hanken_Grotesk, Space_Mono } from "next/font/google";
 import Script from "next/script";
 import React from "react";
 import FbclidCapturer from "@/components/FbclidCapturer";
+import TopBanner from "@/components/TopBanner";
 import "./globals.css";
 
 const anybody = Anybody({
@@ -66,6 +67,7 @@ export default function RootLayout({
         <React.Suspense fallback={null}>
           <FbclidCapturer />
         </React.Suspense>
+        <TopBanner />
         {children}
       </body>
     </html>

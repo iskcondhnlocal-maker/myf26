@@ -10,7 +10,7 @@ export default function FinalCTA({ source = "paid-angle1" }: { source?: string }
         <div className="inline-block relative group">
           <div className="absolute -inset-4 bg-[var(--color-secondary)]/20 blur-xl group-hover:bg-[var(--color-secondary)]/40 transition-all rounded-full"></div>
           <Link data-gtm-cta="register-intent" href={`/register?source=${source}`} className="btn-shine-pulse relative overflow-hidden flex min-w-[320px] cursor-pointer items-center justify-center rounded-none h-20 px-12 bg-[var(--color-secondary)] text-[var(--color-on-secondary-container)] text-2xl font-black transition-all font-display">
-            <span className="relative z-10">Register Kariye — ₹20</span>
+            <span className="relative z-10">Book Last-Minute Ticket — ₹20</span>
           </Link>
         </div>
         
